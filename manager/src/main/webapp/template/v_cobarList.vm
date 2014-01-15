@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/trcolor.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script type="text/javascript" src="js/cobarList.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script language="javascript" type="text/javascript">
+function loadCobarList(clusterId){
+    loadMemoryUsage(clusterId);
+    loadThtoughput(clusterId);
+	showtable("table_o");
+}
+$(window).load(function() {
+    var clusterId = $!{cluster.id};
+	getStatus(clusterId);
+    loadMemoryUsage(clusterId);
+    loadThtoughput(clusterId);
+	showtable("table_o");
+});
+</script>
+</head>
+<body>
+    #parse("template/menu_v.vm")
+    <div class="main">
+        <div class="title">
+            <h2>集群信息</h2>
+        </div>
+        <div class="crumbs"><a href="clusterList.htm">监控模块 </a>&nbsp;&gt;&nbsp; $!{cluster.name}</div>
+        <fieldset class="fild fild_cluster_i">
+            <legend>集群名称：$!{cluster.name}</legend>
+            <div style="float:left;width:16%;min-width:177px;">
+                <table class="cluster cluster_time">
+                    <tbody>
+						<tr>
+                            <td>上线时间：</td><td>$!{cluster.onlineTime}</td>
+                        </tr>
+                        <tr>
+                            <td>运维接口人：</td><td>$!{cluster.maintContact}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:12%;">
+                <table class="cluster cluster_time">
+                    <tbody>
+                        <tr>
+                            <td>活跃节点数：</td><td style="text-align:right;">$!{count.aCount}</td>
+                        </tr>
+                        <tr>
+                            <td>不活跃节点数：</td><td style="text-align:right;">$!{count.iCount}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:35%;">
+                <table class="cluster_bs">
+                    <tbody>
+                        <tr>
+                            <td>部署描述：$!{cluster.deployDesc}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:16%;">
+                <table class="cluster cluster_x">
+                    <tbody>
+                        <tr>
+                            <td>接收流量：<span id="cluster_recv" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>发送流量：<span id="cluster_send" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:16%;">
+                <table class="cluster cluster_x">
+                    <tbody>
+                        <tr>
+                            <td>连接数：<span id="total_connection_count" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+						<tr>
+                            <td>QPS：<span id="total_qps_count" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <table border="0" cellspacing="0" cellpadding="0" class="list" id="table_o">
+            <tr>
+                <th>序号</th>
+                <th>名称</th>
+                <th>主机</th>
+                <th style="text-align:right;">服务端口</th>
+                <th style="text-align:right;">管理端口</th>
+                <th style="text-align:right;width:90px;">内存利用率</th>
+                <th style="text-align:right;width:105px;">接收流量</th>
+                <th style="text-align:right;width:105px;">发送流量</th>
+                <th style="text-align:right;width:65px;">连接数</th>
+				<th style="text-align:right;width:65px;">QPS</th>
+				<th >状态</th>
+            </tr>
+            #foreach($c in $cobarList)
+                <tr>
+                    <td>$velocityCount</td>
+                    <td>
+                        #if(${c.status}=="Active")
+                            <a href="cobarDetail.htm?nodeId=${c.id}">$!{c.name}</a>
+                        #else
+                            $!{c.name}
+                        #end
+                    </td>
+                    <td>${c.host}</td>
+					<td style="text-align:right;">${c.serverPort}</td>
+                    <td style="text-align:right;">${c.port}</td>
+                    <td style="text-align:right;">
+                        <span id="memory_usage_${c.id}" class="dynamic2"></span>
+                    </td>
+					<td style="text-align:right;">
+                        <span id="net_recv_${c.id}" class="dynamic2"></span>
+                    </td>
+					<td style="text-align:right;">
+                        <span id="net_send_${c.id}" class="dynamic2"></span>
+                    </td>
+                    <td style="text-align:right;">
+                        <span id="connection_count_${c.id}" class="dynamic2"></span>
+                    </td>
+					<td style="text-align:right;">
+                        <span id="qps_count_${c.id}" class="dynamic2"></span>
+                    </td>
+					<td ><span id="status_${c.id}" class="dynamic"></span>
+                    </td>
+                </tr>
+            #end
+        </table>
+    </div>
+    #include("template/footer.vm")
+</body>
+</html>

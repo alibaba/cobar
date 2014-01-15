@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/trcolor.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript">
+
+	function showModal(src, height, width){
+    	jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+    		closeHTML : "<input type='button' style='display:none'/>",
+    		closeClass: "modalClose",
+    		opacity : 35,
+    		overlayCss : {
+    			backgroundColor: "#000"
+    		}
+    	});
+    }
+	
+	
+	$(function() {
+	#foreach($c in $connecList)
+		$("#edit_${c.id}").click(function() {
+			document.getElementById('connectionId').value = ${c.id};
+			
+			showModal("killConfirm.htm", 500, 720);
+			return;
+			
+			var confirm = window.confirm("确认关闭该连接？");
+			if (!confirm){
+				return;
+			}
+			var clusterId = document.getElementById('clusterIdK').value;
+			var cobarId = document.getElementById('cobarIdK').value;
+			getJsonFromServer("cobarControl.ajax?" + encodeFormData({
+        		"cobarId":cobarId,
+				"clusterId":clusterId,
+				"connectionId":${c.id},
+        		"valueType":"killconnection",
+        	}), function(returnedJson) {
+				if(returnedJson["second"]){
+					alert("KILL 操作成功");
+				}else{
+					alert("KILL 操作失败，请检查!");
+				}
+				document.getElementById("clusterId").value=document.getElementById("clusterIdK").value;
+				document.getElementById("cobarNodeId").value=document.getElementById("cobarIdK").value;
+				document.getElementById('selectForm').submit();
+			});
+		});
+	#end
+	});
+	
+	function cobarSelect(){
+		var id=document.getElementById('clusterId').value;
+		
+		
+		
+		getJsonFromServerWithPost("cobarControl.ajax", encodeFormData({
+		"clusterId":id,
+		"valueType":"cobarList",
+		}), function(returnedJson) {
+			var len1 =document.getElementById("cobarNodeId").options.length;
+           	for(var i = len1-1;i>=0;i--)
+            {
+           		document.getElementById("cobarNodeId").options[i] = null;
+            }
+            var index = 0;
+			if (returnedJson.length > 0 ){
+				document.getElementById("cobarNodeId").options[index++] = new Option("请选择",0);
+				for (var i=0; i<returnedJson.length; i++){
+					document.getElementById("cobarNodeId").options[index++] = new Option(returnedJson[i].name,returnedJson[i].id);
+				}
+			}else{
+				document.getElementById("cobarNodeId").options[index++] = new Option("请选择",0);
+			}
+	 	});
+	}
+	
+	function checkForm(){
+		var clusterId = document.getElementById("clusterId").value;
+		var cobarNodeId = document.getElementById("cobarNodeId").value;
+		if (cobarNodeId ==0){
+			showModal("alert.htm?reason=1", 500, 720);
+			return;
+		}else{
+			document.getElementById('selectForm').submit();
+		}
+		
+	}
+	
+</script>
+</head>
+<body>
+#parse("template/menu_c.vm")
+
+<div class="main">
+   <div class="title">
+  <h2>连接管理</h2></div>
+  <div class="crumbs">控制模块&nbsp;&gt;&nbsp;连接管理</div>
+  <div style="clear:both;">
+	<form id="selectForm" name="selectForm" method="POST" action="connectionControl.htm">
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:6px;">
+      <tr>
+        <td><img src="images/search_global_l.png" width="78" height="32" /></td>
+        <td background="images/search_global_m.png">所属集群：</td>
+        <td background="images/search_global_m.png"><span style="color:#000; background-image:url(images/search_m.png);">
+         <select name="clusterId" id="clusterId" class="setting_select" onChange="cobarSelect()">
+            #foreach($c in $cList)
+				#if($clusterId == ${c.id})
+					<option value="${c.id}" selected>${c.name}</option>
+				#else
+					<option value="${c.id}">${c.name}</option>
+				#end
+			#end
+         </select>
+        </span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td background="images/search_global_m.png">&nbsp;&nbsp;&nbsp;&nbsp;所属Cobar：</td>
+        <td background="images/search_global_m.png"><span style="color:#000; background-image:url(images/search_m.png);">
+         <select name="cobarNodeId" id="cobarNodeId" class="setting_select">
+			<option value="0">请选择</option>
+            #foreach($c in $cobarList)
+				#if($cobarId == ${c.id})
+					<option value="${c.id}" selected>${c.name}</option>
+				#else
+					<option value="${c.id}">${c.name}</option>
+				#end
+			#end
+         </select>
+        </span></td>
+        <td><img src="images/search_global_r3.png" width="2" height="32" /></td>
+        <td><a class="search_btn" href="javascript:checkForm()"></a></td>
+        <td><img src="images/search_global_r2.png"/></td>
+		<td>
+			#if($!{cobarId} == -3)
+                <font color="red">cobar连接异常，请检查</font>
+			#elseif($!{cobarId} == -2)
+				<font color="red">cobar已被禁用，请检查</font>
+			#end
+		</td>
+      </tr>
+    </table>
+	</form>
+  </div>
+  <table border="0" cellspacing="0" cellpadding="0" class="list" id="table_o">
+     <tr>
+        <th style="text-align:right;width:40px;padding:0 5px 0 5px;">序号</th>
+		<th>HOST</th>
+		<th>PORT</th>
+		<th>L_PORT</th>
+		<th>SCHEMA</th>
+		<th>CHARSET</th>
+		<th style="text-align:right;">NET_IN</th>
+		<th style="text-align:right;">NET_OUT</th>
+		<th style="text-align:right;">ALIVE_TIMES</th>
+		<th style="text-align:right;">W_ATTEMPTS</th>
+		<th style="text-align:right;">R_BUFFER</th>
+		<th style="text-align:right;">S_QUEUE</th>
+		<th style="text-align:right;">CHANNELS</th>
+		<th style="text-align:center;">操作</th>
+     </tr>
+	 #foreach($c in $!connecList)
+	<tr> 
+		<td style="text-align:right;">$velocityCount</td>
+		<td>${c.host}</td>
+		<td>${c.port}</td>
+		<td>${c.local_port}</td>
+		<td>${c.schema}</td>
+		<td>${c.charset}</td>
+		<td style="text-align:right;">${c.netIn}</td>
+		<td style="text-align:right;">${c.netOut}</td>
+		<td style="text-align:right;">${c.aliveTime}</td>
+		<td style="text-align:right;">${c.attempsCount}</td>
+		<td style="text-align:right;">${c.recvBuffer}</td>
+		<td style="text-align:right;">${c.sendQueue}</td>
+		<td style="text-align:right;">${c.channel}</td>
+		<td title="kill该连接,请谨慎操作" style="text-align:center;"><a href="#" class="edit" id="edit_${c.id}" ><img src="images/ico_del.png" width="11" height="11"/></a></td>
+	</tr>
+	 #end
+	<tr>
+		<input id="clusterIdK" type="hidden" value="${clusterId}"></input>
+		<input id="cobarIdK" type="hidden" value="${cobarId}"></input>
+		<input id="connectionId" type="hidden" value="-1"></input>
+	</tr>
+  </table>
+  </div>
+</div>
+#include("template/footer.vm")
+</body>
+</html>

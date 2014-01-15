@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<link type="text/css" href="css/calendar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript" type="text/javascript" src="js/FormValidate.js"></script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() { 
+	$(".modalClose").click(function() {
+		$(window.parent.document).find(".modalClose").trigger('click');
+	})
+});	
+
+function mcheckBlank(){
+	var f=true;
+	if(!checkName('realname','realnameSpan')){
+		f=false;
+	}
+	if(!checkPWD('password','passwordSpan')){
+		f=false;
+	}
+	if(!checkRePWD('password','rpassword','rpasswordSpan')){
+		f=false;
+	}
+	if(!f){
+		return false;	
+	}else{
+		return true;
+	}
+}
+
+function checkForm(flag){
+	var val = document.getElementById('username').value;
+	/*checkBlank*/
+		
+	if(!checkValidNameNoOK('username','usernameSpan')){
+		return;
+	}
+		
+	/*checkBlank&User*/
+	getJsonFromServerWithPost("xmlManager.ajax", encodeFormData({
+		"keyword":val,
+		"valueType":"userNameRepeat",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		if(returnedJson["second"]){
+			setTipsOK("usernameSpan", "OK");
+			if(flag){
+				if(!mcheckBlank()){
+					return;
+				}
+				document.getElementById('addUserForm').submit();
+			}
+		}
+		else{
+			setTipsWarn("usernameSpan", "用户名已存在");
+		}	
+ 	});
+	
+}
+</script>
+</head>
+
+<body class="pop">
+<table cellpadding="0" cellspacing="0" class="pop_top">
+ <tr>
+  <td width="" class="pop_lefttop_small">
+    <div><h1>新增用户:</h1></div>
+  </td>
+  <td valign="top" class="pop_righttop_small"><div class="pop_close modalClose"></div></td>
+ </tr>
+</table>
+<form id="addUserForm" name="addUserForm" method="POST" action="addUser.do">
+<table cellpadding="0" cellspacing="0" class="pop_mid">
+ <tr>
+  <td class="pop_left"></td>
+  <td valign="top" class="pop_content">
+  <table border="0" cellspacing="0" cellpadding="0" class="pop_box">
+     <tr>
+       <th width="112"> 用户类型：</th>
+        <td width="247"><select name="user_role" id="user_role" class="" style="float:left; margin-right:5px; vertical-align:bottom;">
+			<option value="System_Admin" selected>系统管理员</option>
+			<option value="Cluster_Admin" >集群管理员</option></select>
+		</select></td>
+		<td width="191"></td>
+     </tr>
+     <tr>
+       <th> 用户真实姓名：</th>
+       <td><input name="realname" id="realname" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"
+	   onfocus="javascript:setTipsClean('realnameSpan')"/></td>
+	   <td ><span id="realnameSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> 用户名：</th>
+	    <td><input name="username" id="username" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onblur="javascript:checkForm(false)" onfocus="javascript:setTipsClean('usernameSpan')" /></td>
+		<td ><span id="usernameSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th> 用户密码：</th>
+	    <td><input name="password" id="password" type="password" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onfocus="javascript:setTipsClean('passwordSpan')" /></td>
+		<td ><span id="passwordSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> 再次输入密码：</th>
+        <td><input name="rpassword" id="rpassword" type="password" style="float:left; margin-right:5px; vertical-align:bottom;" 
+		onfocus="javascript:setTipsClean('rpasswordSpan')" />
+		</td>
+		<td ><span id="rpasswordSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th > 用户状态：</th>
+        <td ><select name="status" id="status" class="" style="float:left; margin-right:5px; vertical-align:bottom;">
+		    <option value="Normal" selected>激活</option>
+			<option value="Forbidden" >禁用</option></select>
+		</select></td>
+		<td >&nbsp;</td>
+     </tr>
+  </table>
+  </div>
+    <div class="btn_update">
+      <div class="btn" style="margin:0 0 10px 200px;"><a href="javascript:checkForm(true)">提交</a></div>
+    </div>
+  </td>
+  <td class="pop_right"></td>
+ </tr>
+ <tr>
+  <td class="pop_leftbottom_small"></td>
+  <td class="pop_midbottom_small"></td>
+  <td class="pop_rightbottom_small"></td>
+ </tr>
+</table>
+</form>
+</body>
+</html>

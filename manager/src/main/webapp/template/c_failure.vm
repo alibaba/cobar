@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script language="javascript">
+	$(function() {
+		$(".modalClose").click(function() {
+			parent.document.getElementById('selectForm').submit();
+		})
+	});
+</script>
+</head>
+
+<body class="pop pop_del">
+<div class="pop_tipmessage">
+<div class="pop_close modalClose tip_close"></div>
+ <table cellpadding="0" cellspacing="0" >
+  <tr><th>Tip Message</th></tr>
+  <tr><td>$!{reason}</td></tr>
+  <tr><td class="pop_tip_btn"><div class="login_btn right modalClose"><a href="#">È·¶¨</a></div></td></tr>
+ </table>
+</div>
+</body>
+</html>

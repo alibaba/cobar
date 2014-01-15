@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<link type="text/css" href="css/calendar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() { 
+	$(".modalClose").click(function() {
+		$(window.parent.document).find(".modalClose").trigger('click');
+	})
+	document.getElementById("data").innerHTML = parent.document.getElementById("datanodes").value;
+});	
+
+function stopHeartbeat(){
+	var str = parent.document.getElementById("datanodes").value;
+	var clusterId = parent.document.getElementById("clusterIdK").value;
+	parent.document.getElementById("clusterId").value=parent.document.getElementById("clusterIdK").value;
+	
+	document.getElementById("datanodes").value = str;
+	document.getElementById("clusterIdK").value = clusterId;
+	document.getElementById('selectForm').submit();
+}
+
+</script>
+</head>
+
+<body class="pop">
+<table cellpadding="0" cellspacing="0" class="pop_top">
+ <tr>
+  <td width="" class="pop_lefttop_small">
+    <div><h1>选择心跳暂停时间:</h1></div>
+  </td>
+  <td valign="top" class="pop_righttop_small"><div class="pop_close modalClose"></div></td>
+ </tr>
+</table>
+<form id="selectForm" name="selectForm" method="POST" action="stopheartbeat.htm">
+<table cellpadding="0" cellspacing="0" class="pop_mid">
+ <tr>
+  <td class="pop_left"></td>
+  <td valign="top" class="pop_content">
+  <table border="0" cellspacing="0" cellpadding="0" class="pop_box">
+     <tr>
+       <th width="112"> 时间：</th>
+        <td width="247"><select name="stoptime" id="stoptime" class="" style="float:left; margin-right:5px; vertical-align:bottom;width:170px;">
+    		#foreach($c in $stoptimeList)
+				<option value="${c}">${c}</option>
+			#end
+		</select>小时</td>
+		<td width="191">
+			<input id="datanodes" name="datanodes" type="hidden" value="-1"></input>
+			<input id="clusterIdK" name="clusterIdK" type="hidden" value="-1"></input>
+		</td>
+     </tr>
+	 <tr>
+       <th >暂停的数据节点：</th>
+        <td style="padding:5px 0 15px 15px;word-break: break-all;" id="data"></td>
+		<td ></td>
+     </tr>
+  </table>
+	<div class="btn_update">
+      <div style="margin:0 10px 10px 80px; float:left; font-size:18px; color:red"><b>确认暂停心跳?</b></div>
+      <div class="btn" style="margin:0 10px 10px 50px;"><a href="javascript:stopHeartbeat()">确定</a></div>
+	  <div class="btn modalClose" style="margin:0 10px 10px 20px;"><a href="#">取消</a></div>
+    </div>
+  </td>
+  <td class="pop_right"></td>
+ </tr>
+ <tr>
+  <td class="pop_leftbottom_small"></td>
+  <td class="pop_midbottom_small"></td>
+  <td class="pop_rightbottom_small"></td>
+ </tr>
+</table>
+</form>
+</body>
+</html>

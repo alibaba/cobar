@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" >
+$(window).load(function() {
+    #foreach($c in $clusterList)
+	loadClusterInfo(${c.id});
+	#end
+});
+</script>
+</head>
+<body>
+#parse("template/menu_v.vm")
+<div class="main" style="padding-bottom:10px;">
+   <div style="margin:25px 20px 30px 15px; clear:both; ">
+   #foreach($c in $clusterList)
+   <div style="cursor:pointer;" onclick="window.location='cobarList.htm?clusterId=${c.id}'">
+   <div style="margin:0 auto; width:1200px;">
+   <div class="plate">
+   <div style="font-size:14px;padding:15px 0 0 20px;"><b>集群名称：$!{c.name}</b></div>
+     <table class="cluster2" cellpadding="0" cellspacing="0">
+       <tbody>
+         <tr>
+           <td><b>运维接口人</b>：</td><td>$!{c.maintContact}</td>
+         </tr>
+         <tr>
+           <td><b>上线时间</b>：</td><td>$!{c.onlineTime}</td>
+         </tr>
+         <tr>
+           <td><b>服务节点数</b>：</td><td><span id="cobar_count_${c.id}" class="dynamic" >&nbsp;</span></td>
+         </tr>
+         <tr>
+           <td><b>schema数</b>：</td><td><span id="schema_count_${c.id}" class="dynamic" >&nbsp;</span></td>
+         </tr>
+       </tbody>
+     </table>
+     <table class="cluster2 cluster2_x" cellpadding="0" cellspacing="0" style="float:right;">
+         <tbody>
+           <tr>
+             <td><b>接收流量</b>：<span id="cluster_recv_${c.id}" class="dynamic2" >&nbsp;</span></td>
+           </tr>
+           <tr>
+             <td><b>发送流量</b>：<span id="cluster_send_${c.id}" class="dynamic2">&nbsp;</span></td>
+           </tr>
+         <tr>
+           <td><b>连接数</b>：<span id="total_connection_count_${c.id}" class="dynamic2">&nbsp;</span></td>
+         </tr>
+         <tr>
+           <td><b>QPS</b>：<span id="total_qps_count_${c.id}" class="dynamic2">&nbsp;</span></td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+   </div>
+   </div>
+   #end
+   </div>
+</div>
+#include("template/footer.vm")
+</body>
+</html>

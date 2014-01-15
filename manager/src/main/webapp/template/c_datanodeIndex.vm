@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script>
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() { 
+	$(".modalClose").click(function() {
+		$(window.parent.document).find(".modalClose").trigger('click');
+	})
+	document.getElementById("data").innerHTML = parent.document.getElementById("datanodes").value;
+});	
+
+function switchdatanode(){
+    
+	var str = parent.document.getElementById("datanodes").value;
+	var clusterId = parent.document.getElementById("clusterIdK").value;
+	parent.document.getElementById("clusterId").value=parent.document.getElementById("clusterIdK").value;
+	
+	document.getElementById("datanodes").value = str;
+	document.getElementById("clusterIdK").value = clusterId;
+	document.getElementById('selectForm').submit();
+	
+}
+</script>
+</head>
+
+<body class="pop">
+<table cellpadding="0" cellspacing="0" class="pop_top">
+ <tr>
+  <td width="" class="pop_lefttop_small">
+    <div><h1>选择目标数据节点编号:</h1></div>
+  </td>
+  <td valign="top" class="pop_righttop_small"><div class="pop_close modalClose"></div></td>
+ </tr>
+</table>
+<form id="selectForm" name="selectForm" method="POST" action="switchDatanode.do">
+<table cellpadding="0" cellspacing="0" class="pop_mid">
+ <tr>
+  <td class="pop_left"></td>
+  <td valign="top" class="pop_content">
+  <table border="0" cellspacing="0" cellpadding="0" class="pop_box">
+     <tr>
+       <th width="112"> index：</th>
+        <td width="247"><select name="index" id="index" class="" style="float:left; margin-right:5px; vertical-align:bottom;">
+    		#foreach($c in $indexList)
+    			<option value="${c}">${c}</option>
+    		#end
+		</select></td>
+		<td width="191">
+			<input id="datanodes" name="datanodes" type="hidden" value="-1" />
+			<input id="clusterIdK" name="clusterIdK" type="hidden" value="-1" />
+		</td>
+     </tr>
+	 <tr>
+       <th >切换的数据节点：</th>
+        <td style="padding:5px 0 15px 15px;word-break: break-all;" id="data"></td>
+		<td ></td>
+     </tr>
+  </table>
+    <div class="btn_update">
+      <div style="margin:0 10px 10px 80px; float:left; font-size:18px; color:red"><b>确认进行数据节点切换?</b></div>
+      <div class="btn" style="margin:0 10px 10px 50px;"><a href="javascript:switchdatanode()">确定</a></div>
+	  <div class="btn modalClose" style="margin:0 10px 10px 20px;"><a href="#">取消</a></div>
+    </div>
+  </td>
+  <td class="pop_right"></td>
+ </tr>
+ <tr>
+  <td class="pop_leftbottom_small"></td>
+  <td class="pop_midbottom_small"></td>
+  <td class="pop_rightbottom_small"></td>
+ </tr>
+</table>
+</form>
+</body>
+</html>

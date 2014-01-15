@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script language="javascript" type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() { 
+	$(".modalClose").click(function() {
+		parent.document.getElementById('selectForm').submit();
+	})
+});
+</script>
+</head>
+<body class="pop">
+<div class="pop_tipmessage_succeed" >
+    <div class="pop_close modalClose tip_close"></div>
+    <div style="margin:60px 25px 0 0; float:right;">
+        <div style=" line-height:32px; float:left; font-size:18px; color:000"></div>
+		<div style="width:300px; clear:both;">
+          <div style="width:100px;float:left;line-height:24px;font-size:14px;text-align:left;"><b>cobar</b></div>
+          <div style="width:160px; float:right; line-height:24px; padding-left:40px;font-size:14px;"><b>result</b></div>
+        </div>
+		#foreach($c in $resultList)
+            <div style="width:300px; clear:both;">
+              <div style="width:100px;float:left;line-height:20px;text-align:left;"><b>$!{c.name}</b></div>
+              <div style="width:160px; float:right; line-height:20px; padding-left:20px;"><b>$!{c.result}</b></div>
+            </div>
+		#end
+        <div class="pop_tip_btn" style="clear:both;margin-top:30px;">
+            <div class="login_btn right modalClose">
+                <a href="#">确定</a>
+            </div>
+        </div>
+</div>
+</div>
+</body>
+</html>

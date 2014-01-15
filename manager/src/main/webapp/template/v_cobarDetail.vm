@@ -1,0 +1,448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/trcolor.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script type="text/javascript" src="js/swfobject.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/serverstatus.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() { 
+	cobarStatus(${cobarNode.id});
+});
+
+
+function nTabs(objName,index,nodeId){
+	if(objName.className == "tab_active")return;
+	var tabObj = objName.parentNode.id;
+	var tabList = document.getElementById(tabObj).getElementsByTagName("li");
+	for(i=0; i <tabList.length; i++)
+	{
+	  if (i == index)
+	  {
+	   	  tabList[i].className = "tab_active"; 
+	      document.getElementById(tabObj+"_Content"+i).style.display = "block";
+	  }else{
+	      tabList[i].className = "normal"; 
+	      document.getElementById(tabObj+"_Content"+i).style.display = "none";
+	  }
+	}
+	
+	if(index == 0){
+		//Processors
+		
+		loadProcessorTab(${cobarNode.id});
+	} 
+	else if(index == 1){
+		//Threadpool
+		clearInterval(processor_timer_id);
+		
+		loadThreadPoolTable(nodeId);
+	}
+	else if(index == 2){
+		//Command
+		clearInterval(processor_timer_id);
+		
+		loadCommandTable(nodeId);
+	}
+	else if(index == 3){
+		//Connection
+		clearInterval(processor_timer_id);
+		
+		loadConnectionTable(nodeId);
+	}
+	else if(index == 4){
+		//datanode
+		clearInterval(processor_timer_id);
+
+		loadDatabaseTable(nodeId);
+	}else if(index == 5){
+		//databases
+		clearInterval(processor_timer_id);
+
+		loadDatanodeTable(nodeId);
+	}else{
+		//datasources
+		clearInterval(processor_timer_id);
+
+		loadDatasourceTable(nodeId);
+	}
+}	
+
+function cmdRadio(Num,nodeId){
+	var j = 1-Num;
+	document.getElementById("cmd_Div_"+j).style.display="none";
+	document.getElementById("cmd_Div_"+Num).style.display="block";	
+	
+	if(Num==0) {
+		clearInterval(commandtps_timer_id);
+		loadCommandTable(nodeId);
+	}
+	else if (Num==1) {
+		loadCommandTPSTable(nodeId);
+	}
+}
+
+function sqlRadio(Num,nodeId){
+	var divCount = 2;
+	for(var i=0;i<divCount;i++){
+		if(i!=Num)
+			document.getElementById("SQLDiv_"+i).style.display="none";
+		else
+			document.getElementById("SQLDiv_"+i).style.display="block";	
+	}
+	
+	if(Num==0) {
+		//show @@sql.execute;
+		loadSQLExecuteTable(nodeId,0);
+	}
+	else if (Num==1) {
+		//show @@sql.slow;
+		loadSQLSlowTable(nodeId,0);
+	}
+}
+
+//*********************************SQL*********************************
+function getSelectedPage(selecteId){
+	return document.getElementById(selecteId).options[document.getElementById(selecteId).selectedIndex].value;
+}
+function createBlankTarget(URI, para1, val1, para2, val2, para3, val3, display){
+	var result = "";
+	result += "<a href='";
+	result += URI;
+	result += "?";
+	result += para1;
+	result += "=";
+	result += val1;
+	result += "&";
+	result += para2;
+	result += "=";
+	result += val2;
+	result += "&";
+	result += para3;
+	result += "="
+	result += val3;
+	result += "' "
+	result += "target='blank' >"
+	result += display;
+	result += "</a>"
+	return result;
+}
+//--------------------------------SQL 执行----------------------------------------
+function loadSQLExecuteTable(nodeId, offset){
+	getJsonFromServer("sqlRelatedSearch.ajax?" + encodeFormData({
+		"cobarId":nodeId,
+		"offset":offset,
+		"valueType":"sqlExecute",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		var targetTable=document.getElementById("sqlExecuteTable");
+		while(targetTable.rows.length > 1){
+			targetTable.deleteRow(1);
+		}
+		for(var i=0; i<returnedJson.length-1; i++){
+			var newRow=targetTable.insertRow(i+1);
+			var sqlId = returnedJson[i]["sqlId"];
+			newRow.insertCell(0).innerHTML=createBlankTarget("showSQLDetail.htm", "nodeId", nodeId, "sqlId", sqlId, "offset", 0, sqlId);
+			newRow.insertCell(1).innerHTML=returnedJson[i]["executeCount"];
+			newRow.insertCell(2).innerHTML=dfn(returnedJson[i]["timeCount"], digit_3);
+			newRow.insertCell(3).innerHTML=dfn(returnedJson[i]["maxTime"], digit_1);
+			newRow.insertCell(4).innerHTML=dfn(returnedJson[i]["minTime"], digit_1);
+			newRow.insertCell(5).innerHTML=dfn(returnedJson[i]["avg"], digit_1);
+		}
+		var pages = returnedJson[returnedJson.length-1]["pages"];
+		var items = returnedJson[returnedJson.length-1]["items"];
+		var current = returnedJson[returnedJson.length-1]["current"];
+		var str = "总" + pages + "页，" + items + "项 " ;
+		if(current > 1)
+			str += "<a href='javascript:loadSQLExecuteTable("+nodeId+", "+ (current-2) +")' class='prev'>上一页</a>";
+		str += " 第" + current + "页 ";
+		if(current < pages)
+			str += "<a href='javascript:loadSQLExecuteTable("+nodeId+", "+ (current) +")' class='prev'>下一页</a>";
+		str += "跳到第<select name='sqlExecuteSelect' id='sqlExecuteSelect' >"
+		for(var i=1; i<=pages; i++){
+			str += "<option value="+(i-1)+">"+i+"</option>"
+		}
+		str += "</select>页 <a href='javascript:loadSQLExecuteTable("+nodeId+", getSelectedPage(\"sqlExecuteSelect\"))' style='font-weight:bold' class='prev'>GO</a> "
+		
+		document.getElementById("Execute_Page_Span").innerHTML = str; 
+		
+		var avg = dfn(returnedJson[returnedJson.length-1]["avg"], digit_3);
+		loadDigitalInfo("avgTime", "", avg);
+	});
+}
+
+//--------------------------------慢速 SQL----------------------------------------
+function loadSQLSlowTable(nodeId, offset){
+	getJsonFromServer("sqlRelatedSearch.ajax?" + encodeFormData({
+		"cobarId":nodeId,
+		"offset":offset,
+		"valueType":"sqlSlow",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		var targetTable=document.getElementById("sqlSlowTable");
+		while(targetTable.rows.length > 1){
+			targetTable.deleteRow(1);
+		}
+		for(var i=0; i<returnedJson.length-1; i++){
+			var newRow=targetTable.insertRow(i+1);
+			newRow.insertCell(0).innerHTML=dfn(returnedJson[i]["time"] ,digit_3);
+			newRow.insertCell(1).innerHTML=returnedJson[i]["dataSource"];
+			newRow.insertCell(2).innerHTML=returnedJson[i]["executeTimestamp"];
+			newRow.insertCell(3).innerHTML=returnedJson[i]["sql"];
+		}
+		var pages = returnedJson[returnedJson.length-1]["pages"];
+		var items = returnedJson[returnedJson.length-1]["items"];
+		var current = returnedJson[returnedJson.length-1]["current"];
+		var str = "总" + pages + "页，" + items + "项 " ;
+		if(current > 1)
+			str += "<a href='javascript:loadSQLSlowTable("+nodeId+", "+ (current-2) +")' class='prev'>上一页</a>";
+		str += " 第" + current + "页 ";
+		if(current < pages)
+			str += "<a href='javascript:loadSQLSlowTable("+nodeId+", "+ (current) +")' class='prev'>下一页</a>";
+		str += "跳到第<select name='sqlSlowSelect' id='sqlSlowSelect' >"
+		for(var i=1; i<=pages; i++){
+			str += "<option value="+(i-1)+">"+i+"</option>"
+		}
+		str += "</select>页 <a href='javascript:loadSQLSlowTable("+nodeId+", getSelectedPage(\"sqlSlowSelect\"))' style='font-weight:bold' class='prev'>GO</a> "
+		
+		document.getElementById("Slow_Page_Span").innerHTML = str; 
+	});
+}
+
+</script>
+</head>
+<body onload="loadProcessorTab(${cobarNode.id})">
+#parse("template/menu_v.vm")
+
+<div class="main">
+   <div class="title">
+   <h2>节点信息</h2></div>
+   <div class="crumbs"><a href="clusterList.htm">监控模块 </a> &nbsp;&gt;&nbsp;<a href="cobarList.htm?clusterId=${cluster.id}">$!{cluster.name}</a> &nbsp;&gt;&nbsp;  $!{cobarNode.name}</div>
+       <div class="main_content">
+		<fieldset class="fild fild_cluster_i">
+            <legend>运行概况&nbsp;/&nbsp;账户信息</legend>
+            <div style="float:left;width:15%;">
+                <table class="cluster cluster_time2">
+                    <tbody>
+                        <tr>
+                            <td>版本号：</td><td><span id="version" class="dynamic"></span></td>
+                        </tr>
+                        <tr>
+                            <td>主机：</td><td>$!{cobarNode.host}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:10%;">
+                <table class="cluster cluster_time2">
+                    <tbody>
+                        <tr>
+                            <td>服务端口：</td><td>$!{cobarNode.serverPort}</td>
+                        </tr>
+                        <tr>
+                            <td>管理端口：</td><td>$!{cobarNode.port}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:12%;">
+                 <table class="cluster cluster_time2">
+                    <tbody>
+                        <tr>
+                            <td>用户名：</td><td>$!{cobarNode.user}</td>
+                        </tr>
+                        <tr>
+                            <td>状态：</td><td><span id="status" class="dynamic"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+			<div class="line_dot line_cluster"></div>
+            <div style="float:left;width:19%;">
+                 <table class="cluster cluster_time2">
+                    <tbody>
+                        <tr>
+                            <td>启动时间：<span id="starttime" class="dynamic"></span></td>
+                        </tr>
+                        <tr>
+                            <td>运行时间：<span id="uptime" class="dynamic">&nbsp;</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:13%;">
+                <table class="cluster cluster_time2">
+                    <tbody>
+                        <tr>
+                            <td>使用内存：<span id="mem_used" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>总内存：<span id="mem_total" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="line_dot line_cluster"></div>
+            <div style="float:left;width:15%;">
+                <table class="cluster cluster_time2">
+                    <tbody>
+                        <tr>
+                            <td>接收流量：<span id="net_recv" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>发送流量：<span id="net_send" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+			<div class="line_dot line_cluster"></div>
+            <div style="float:left;width:10%;">
+                <table class="cluster cluster_time2">
+                    <tbody>
+                        <tr>
+                            <td>连接数：<span id="connection_count" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>QPS：<span id="qps_count" class="dynamic2">&nbsp;</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+		
+      <div class="tab" id="Tab2">
+        <div class="menubox">
+        <ul id="myTab0">
+           <li onclick="nTabs(this,0,${cobarNode.id});" class="tab_active"><a href="#">Processors</a></li>
+           <li onclick="nTabs(this,1,${cobarNode.id});" class="normal"><a href="#">Threadpool</a></li>
+           <li onclick="nTabs(this,2,${cobarNode.id});" class="normal"><a href="#">Command</a></li>   
+           <li onclick="nTabs(this,3,${cobarNode.id});" class="normal"><a href="#">Connection</a></li>
+           <li onclick="nTabs(this,4,${cobarNode.id});" class="normal"><a href="#">Databases</a></li>
+		   <li onclick="nTabs(this,5,${cobarNode.id});" class="normal"><a href="#">DataNodes</a></li>
+		   <li onclick="nTabs(this,6,${cobarNode.id});" class="normal"><a href="#">DataSources</a></li>
+        </ul>
+        </div>	
+         <div class="contentbox_tab box_tab">  
+           <div id="myTab0_Content0">
+             <table id="processorTable" border="0" cellspacing="0" cellpadding="0" class="listr" name="table_o">
+               <tr>
+                <th style="text-align:left;">NAME</th>
+				<th>NET_IN</th>
+				<th>NET_OUT</th>
+				<th>REACT_COUNT</th>
+				<th>R_QUEUE</th>
+				<th>W_QUEUE</th>
+				<th>FREE_BUFFER</th>
+				<th>TOTAL_BUFFER</th>
+				<th>FC_COUNT</th>
+				<th>BC_COUNT</th>
+               </tr>
+             </table>           
+           </div>
+           <div id="myTab0_Content1" class="none">
+			 <table id="threadpoolTable" border="0" cellspacing="0" cellpadding="0" class="listr" name="table_o">
+               <tr>
+                <th style="text-align:left;">NAME</th>
+				<th>POOL_SIZE</th>
+				<th>ACTIVE_COUNT</th>
+				<th>TASK_QUEUE_SIZE</th>
+				<th>COMPLETED_TASK</th>
+				<th>TOTAL_TASK</th>
+               </tr>
+             </table>
+		   </div>
+           <div id="myTab0_Content2" class="none">
+			 <table id="commandTable" border="0" cellspacing="0" cellpadding="0" class="listr" name="table_o">
+               <tr>
+                <th style="text-align:left;">PROCESSOR</th>
+				<th>INIT_DB</th>
+				<th>QUERY</th>
+				<th>STMT_PREPARED</th>
+				<th>STMT_EXECUTE</th>
+				<th>STMT_CLOSE</th>
+				<th>PING</th>
+				<th>KILL</th>
+				<th>QUIT</th>
+				<th>OTHER</th>
+               </tr>
+             </table>
+		   </div>
+           <div id="myTab0_Content3" class="none">
+		     <table id="connectionTable" border="0" cellspacing="0" cellpadding="0" class="listr" name="table_o">
+               <tr>
+                <th style="text-align:left;">PROCESSOR</th>
+				<th style="text-align:left;">HOST</th>
+				<th>PORT</th>
+				<th title="LOCAL_PORT">L_PORT</th>
+				<th style="text-align:left;">SCHEMA</th>
+				<th style="text-align:left;">CHARSET</th>
+				<th>NET_IN</th>
+				<th>NET_OUT</th>
+				<th>ALIVE_TIMES</th>
+				<th>W_ATTEMPTS</th>
+				<th>R_BUFFER</th>
+				<th>S_QUEUE</th>
+				<th>CHANNELS</th>
+               </tr>
+             </table>
+		   </div>
+		   <div id="myTab0_Content4" class="none">
+		     <table id="databaseTable" border="0" cellspacing="0" cellpadding="0" class="list2" name="table_o">
+               <tr>
+                <th style="width:40px;text-align:right;">序号</th>
+                <th>DATABASE</th>
+               </tr>
+             </table>
+		   </div>
+           <div id="myTab0_Content5" class="none">
+		     <table id="datanodeTable" border="0" cellspacing="0" cellpadding="0" class="listr" name="table_o">
+               <tr>
+				<th style="width:40px;text-align:right;">序号</th>
+                <th style="text-align:left;">NAME</th>
+				<th style="text-align:left;">DATASOURCES</th>
+				<th>INDEX</th>
+				<th>TYPE</th>
+				<th>ACTIVE</th>
+				<th>IDLE</th>
+				<th>SIZE</th>
+				<th>EXECUTE</th>
+				<th>RECOVERY_TIME</th>
+               </tr>
+             </table>
+		   </div>
+		   <div id="myTab0_Content6" class="none">
+		     <table id="datasourceTable" border="0" cellspacing="0" cellpadding="0" class="list2" name="table_o">
+               <tr>
+				<th style="width:40px;text-align:right;">序号</th>
+                <th>NAME</th>
+				<th>TYPE</th>
+				<th>HOST</th>
+				<th>PORT</th>
+				<th>SCHEMA</th>
+               </tr>
+             </table>
+		   </div>
+         </div>
+        </div>
+    </div>
+</div>
+#include("template/footer.vm")
+</body>
+</html>

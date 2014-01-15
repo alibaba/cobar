@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/trcolor.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script language="javascript">
+	$(function() {
+		function showModal(src, height, width){
+			jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+				closeHTML : "<input type='button' style='display:none'/>",
+				closeClass: "modalClose",
+				opacity : 35,
+				overlayCss : {
+					backgroundColor: "#000"
+				}
+			});
+		}
+		
+		$(".vipManager").click(function(){
+			showModal("m_vipManager.htm",500,720);
+		});
+		
+		#foreach($c in $clusterList)
+		$("#edit_${c.id}").click(function() {
+			//var src = "editClusterPage.htm?clusterId=${c.id}";
+			//showModal(src, 500, 720);
+		});
+		#end
+	});
+</script>
+</head>
+<body>
+#parse("template/menu_m.vm")
+
+<div class="main">
+   <div class="title">
+  <h2>系统管理</h2></div>
+  <div class="crumbs"><a href="m_clusterList.htm">系统管理</a> &nbsp;&gt;&nbsp;VIP管理</div>
+  <div style="clear:both;">
+	<form id="selectForm" name="selectForm" method="POST" action="m_vipList.htm">
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:6px;">
+      <tr>
+        <td><img src="images/search_global_l.png" width="78" height="32" /></td>
+        <td background="images/search_global_m.png">VIP：</td>
+        <td background="images/search_global_m.png"><span style="color:#000; background-image:url(images/search_m.png);">
+         <select name="vipId" id="vipId" class="setting_select">
+             #foreach($c in $vipList)
+    			#if($!vipId == ${c.id})
+    				<option value="${c.id}" selected>$!{c.vip}</option>
+    			#else
+    				<option value="${c.id}">$!{c.vip}</option>
+    			#end
+    		#end
+         </select>
+        </span></td>
+        <td><img src="images/search_global_r3.png" width="2" height="32" /></td>
+        <td><a class="search_btn" href="javascript:void(document.getElementById('selectForm').submit())"></a></td>
+        <td><img src="images/search_global_r2.png"/></td>
+		<td><input id="vipIdK" name="vipIdK" type="hidden" value="$!{vipId}"></td>
+      </tr>
+    </table>
+	</form>
+  </div>
+  <div style="padding:15px 15px 15px 15px; background-color: #F5F5F5; border: #E1E1E1 1px solid;">
+  <div style="margin-bottom:8px">
+    <table border="0" cellpadding="0" cellspacing="0">
+       <tr>
+		 <td style="padding-right:10px;"><div class="btn4"><a href="#" class="vipManager">管理VIP </a></div></td>
+         <td style="padding-right:10px;"><div class="btn4"><a href="m_vipCobarManager.htm?vipIdK=${vipId}" class="">VIP新增Cobar节点</a></div></td>
+      </tr>
+    </table>
+  </div>
+  <table border="0" cellspacing="0" cellpadding="0" class="list" id="table_o">
+     <tr>
+        <th>序号</th>
+        <th>集群名称</th>
+        <th>Cobar名称</th>
+		<th>IP地址</th>
+		<th>服务端口</th>
+        <th>管理端口</th>
+		<th>状态</th>
+		<th>删除</th>
+     </tr>
+	 #foreach($c in $cobarList)
+        <tr>
+            <td>$velocityCount</td>
+            <td>$!{c.clusterName}</td>
+            <td>$!{c.name}</td>
+			<td>$!{c.host}</td>
+			<td>$!{c.serverPort}</td>
+            <td>$!{c.port}</td>
+            <td>#if($!{c.status}=="Active") 启用 #else 禁用 #end</td>
+			<td title="从此VIP域删除该cobar节点"><a href="#" class="edit" id="edit_${c.id}">[&nbsp;删除&nbsp;]</a></td>
+        </tr>
+     #end
+  </table>
+  </div>
+</div>
+<div class="footer">
+ <span>Copyright&nbsp;@&nbsp;2003-2011&nbsp;&nbsp;alibaba.com&nbsp;&nbsp;版权所有</span>
+</div>
+</body>
+</html>

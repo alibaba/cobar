@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" >
+function loadTotalInfo(){
+    document.getElementById('userName').focus();
+	//loadIndexInfo();
+	#foreach($c in $clusterList)
+	loadClusterInfo(${c.id});
+	#end
+}
+
+function showModal(src, height, width){
+		jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+			closeHTML : "<input type='button' style='display:none'/>",
+			closeClass: "modalClose",
+			opacity : 35,
+			overlayCss : {
+				backgroundColor: "#000"
+			}
+		});
+}
+
+$(window).load(function() {
+    #foreach($c in $clusterList)
+	loadClusterInfo(${c.id});
+	#end
+});
+
+var modalflag = false;
+
+$(function() {
+	if(self.location != top.location){
+		window.parent.location.reload();
+		$(window.parent.document).find(".modalClose").trigger('click');
+	}
+	
+	var val = "$result";
+	if(val == "false"){
+		showModal("logInFail.htm", "400", "750");
+		modalflag = true;
+	}else if (val == "login"){
+		showModal("logInPage.htm", "400", "600");
+		modalflag = true;
+	}
+	
+	document.getElementById('userName').focus();
+});
+
+function checkForm(){
+	var user = document.getElementById('userName').value;
+	if(Trim(user) == ""){
+		showModal("alert.htm?reason=5", "500", "750");
+		return;
+	}
+		
+	var pwd = document.getElementById('password').value;
+	if(Trim(pwd) == ""){
+		showModal("alert.htm?reason=6", "500", "750");
+		return;
+	}
+	document.getElementById("logInForm").submit();
+}
+
+function onclickForm(){
+	document.getElementById("clickForm").submit();
+}
+
+$(document).keydown(function(event) {
+  if (event.keyCode == 13) {
+  	if(modalflag == true){
+		$(window.parent.document).find(".modalClose").trigger('click');
+		modalflag = false;
+	}else{
+  	 	checkForm();
+	}
+  }
+}); 
+</script>
+</head>
+<body class="login">
+<div class="login-top">
+     <div style=" margin-left:10px; width:100px; float:left;"><img src="images/login_logo.png" width="230" height="74" /></div>
+     <div style=" float:right; margin:30px 30px 0 0;">
+	   <form action="login.do" id="logInForm" method="POST" >
+       <table border="0" cellspacing="0" cellpadding="0" >
+         <tr>
+           <td style="color:#fff;">用户名：</td>
+                <td><input name="userName" id="userName" type="text" class="login_input" tabindex="1" /></td>
+           <td style="color:#fff; padding-left:10px;">密码：</td>
+           <td><input name="password" id="password" type="password" class="login_input" tabindex="2"/></td>
+           <td><div class="login_btn right" style="margin-left:10px;"><a href="javascript:checkForm()" tabindex="3">登&nbsp;&nbsp;&nbsp;录</a></div></td>
+		   <td><input name="click" id="click" type="hidden" value="true"/></td>
+         </tr>
+       </table>
+       </form>
+	   
+	   <form action="clusterList.htm" id="clickForm" method="POST">
+		<table border="0" cellspacing="0" cellpadding="0" >
+         <tr>
+           <td><input name="click" id="click" type="hidden" value="true"/></td>
+         </tr>
+       </table>
+	   </form>
+     </div>
+</div>
+<div class="main_index">
+
+#foreach($c in $clusterList)
+<div style="cursor:pointer;" onclick="javascript:onclickForm()">
+   <div style="margin:0 auto; width:1200px;">
+   <div class="plate" >
+   <div style="font-size:14px;padding:15px 0 0 20px;"><b>集群名称：$!{c.name}</b></div>
+     <table class="cluster2" cellpadding="0" cellspacing="0">
+       <tbody>
+         <tr>
+           <td><b>运维接口人</b>：</td><td>$!{c.maintContact}</td>
+         </tr>
+         <tr>
+           <td><b>上线时间</b>：</td><td>$!{c.onlineTime}</td>
+         </tr>
+         <tr>
+           <td><b>服务节点数</b>：</td><td><span id="cobar_count_${c.id}" class="dynamic" >&nbsp;</span></td>
+         </tr>
+         <tr>
+           <td><b>schema数</b>：</td><td><span id="schema_count_${c.id}" class="dynamic" >&nbsp;</span></td>
+         </tr>
+       </tbody>
+     </table>
+     <table class="cluster2 cluster2_x" cellpadding="0" cellspacing="0" style="float:right;">
+         <tbody>
+           <tr>
+             <td><b>接收流量</b>：<span id="cluster_recv_${c.id}" class="dynamic2" >&nbsp;</span></td>
+           </tr>
+           <tr>
+             <td><b>发送流量</b>：<span id="cluster_send_${c.id}" class="dynamic2">&nbsp;</span></td>
+           </tr>
+         <tr>
+           <td><b>连接数</b>：<span id="total_connection_count_${c.id}" class="dynamic2">&nbsp;</span></td>
+         </tr>
+         <tr>
+           <td><b>QPS</b>：<span id="total_qps_count_${c.id}" class="dynamic2">&nbsp;</span></td>
+         </tr>
+       </tbody>
+     </table>
+   </div>
+   </div>
+</div>
+#end
+
+</div>
+</body>
+</html>

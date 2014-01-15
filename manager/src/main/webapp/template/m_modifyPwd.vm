@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script language="javascript" type="text/javascript" src="js/FormValidate.js"></script>
+<script language="javascript">
+
+function showModal(src, height, width){
+	jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+		closeHTML : "<input type='button' style='display:none'/>",
+		closeClass: "modalClose",
+		opacity : 35,
+		overlayCss : {
+			backgroundColor: "#000"
+		}
+	});
+}
+	
+function checkForm(){
+	var flag = true;
+	if(!checkPWD('newPassword','newPasswordSpan')){
+		flag=false;
+	}
+	
+	if(!checkRePWD('newPassword','newPasswordr','newPasswordrSpan')){
+		flag=false;
+	}
+	if (!flag){
+		return;
+	}
+	showModal("modifyPwdConfirm.htm", 500, 720);
+	//document.getElementById("modifyPwdForm").submit();
+}
+
+function checkPassword (){
+	var val = document.getElementById('oldPassword').value;
+		
+	if(!checkPWDNoOk('oldPassword','oldPasswordSpan')){
+		return;
+	}
+		
+	getJsonFromServerWithPost("xmlManager.ajax", encodeFormData({
+		"keyword":val,
+		"valueType":"passwordValidate",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		if(returnedJson["second"]){
+			setTipsOK("oldPasswordSpan", "OK");
+		}
+		else{
+			setTipsWarn("oldPasswordSpan", "密码错误");
+		}	
+ 	});
+}
+
+function setTipsAllClean(){
+    setTipsClean('newPasswordSpan');
+    setTipsClean('newPasswordrSpan');
+}
+
+$(document).keydown(function(event) {
+  if (event.keyCode == 13) {
+  	 checkForm();
+  }
+}); 
+</script>
+</head>
+<body>
+#parse("template/menu_m.vm")
+
+<div class="main">
+   <div class="title">
+  <h2>修改密码</h2></div>
+  <div class="crumbs">系统管理&nbsp;&gt;&nbsp;修改密码</div>
+  <div style="clear:both;"></div>
+  <div style="padding:15px 15px 15px 15px; background-color: #F5F5F5; border: #E1E1E1 1px solid;">
+
+    <form id="modifyPwdForm" name="modifyPwdForm" method="POST" action="modifyPwd.do">
+    <table cellpadding="0" cellspacing="0" class="pwd_box">
+     <tr>
+       <th> 旧密码:</th>
+       <td><input name="oldPassword" id="oldPassword" type="password" style="float:left; margin-right:5px; vertical-align:bottom;"
+	   onfocus="javascript:setTipsClean('oldPasswordSpan')" onblur="javascript:checkPassword()"/></td>
+	   <td style="text-align:left;width:135px;"><span id="oldPasswordSpan" >&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th> 新密码 :</th>
+       <td><input name="newPassword" id="newPassword" type="password" style="float:left; margin-right:5px; vertical-align:bottom;"
+	   onfocus="javascript:setTipsAllClean()" /></td>
+	   <td style="text-align:left;width:135px;"><span id="newPasswordSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th> 再次输入新密码 :</th>
+       <td><input name="newPasswordr" id="newPasswordr" type="password" style="float:left; margin-right:5px; vertical-align:bottom;"
+	   onfocus="javascript:setTipsAllClean()" /></td>
+	   <td style="text-align:left;width:135px;"><span id="newPasswordrSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+        <th></th>
+        <td >
+			<div class="login_btn" style="margin:10px 50px 0 150px; vertical-align:bottom;"><a href="javascript:checkForm()">确认</a></div>
+		</td>
+        <td></td>
+	 </tr>
+    </table>
+    </form>
+  </div>
+</div>
+#include("template/footer.vm")
+</body>
+</html>

@@ -1,0 +1,32 @@
+<div class="head">
+  <div class="header"></div>
+  <div class="head_right">
+    <div class="exit" title="退出"><a href="logout.do"><img src="images/exit.png" width="14" height="19" /></a></div>
+    <span>${user.realname}，欢迎您登录！</span>
+  </div>
+</div>
+	
+<div class="nav">
+   <ul>
+    <li class="current"><a href="clusterList.htm">监控模块</a></li>
+    <li class="sub_nav"><a href="datanodesControl.htm">控制模块</a>
+        <ul>
+          <li><a href="datanodesControl.htm">节点管理</a></li>
+          <li><a href="propertyReloadScreen.htm">配置重置</a></li>
+          <li><a href="connectionControl.htm">连接管理</a></li>
+        </ul>   
+    </li>
+	
+    <li class="sub_nav"><a href="m_clusterList.htm">系统管理</a>
+        <ul>
+		  #if($!{user.user_role}=="System_Admin")
+          <li><a href="m_clusterList.htm">集群管理</a></li>
+		  <li><a href="m_userList.htm">用户管理</a></li>
+		  <li><a href="m_propertyList.htm">配置管理</a></li>
+		  #end
+		  <li><a href="m_modifypwd.htm">修改密码</a></li>
+        </ul>
+    </li>
+	
+   </ul>
+</div>

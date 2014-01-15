@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/trcolor.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script language="javascript">
+$(function() {
+	function showModal(src, height, width){
+		jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+			closeHTML : "<input type='button' style='display:none'/>",
+			closeClass: "modalClose",
+			opacity : 35,
+			overlayCss : {
+				backgroundColor: "#000"
+			}
+		});
+	}
+	
+	$("#edit_stoptime").click(function() {
+		var src = "editStopTimesPage.htm?";
+		showModal(src, 500, 720);
+	});
+});
+</script>
+</head>
+<body>
+#parse("template/menu_m.vm")
+
+<div class="main">
+   <div class="title">
+  <h2>配置管理</h2></div>
+  <div class="crumbs">系统管理&nbsp;&gt;&nbsp;配置管理</div>
+  <table border="0" cellspacing="0" cellpadding="0" class="list" id="table_o">
+     <tr>
+        <th>序号</th>
+        <th>配置项名称</th>
+        <th>配置项的值</th>
+    	<th>编辑</th>
+     </tr>
+	 <tr>
+        <td>1</td>
+        <td>暂停时间</td>
+        <td> #foreach($i in $pList)${i}|#end(小时)
+    	</td>
+        <td title="修改配置信息"><a href="#" class="edit" id="edit_stoptime">[&nbsp;编辑&nbsp;]</a></td>
+     </tr>
+  </table>
+  </div>
+</div>
+#include("template/footer.vm")
+</body>
+</html>

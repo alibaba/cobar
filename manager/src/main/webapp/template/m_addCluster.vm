@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<link type="text/css" href="css/calendar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript" type="text/javascript" src="js/FormValidate.js"></script>
+<script language="javascript" type="text/javascript" src="js/calendar.js"></script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() { 
+	$(".modalClose").click(function() {
+		$(window.parent.document).find(".modalClose").trigger('click');
+	})
+});
+
+function mcheckBlank(){
+	var f=true;
+	if(!checkName('deployName','deployNameSpan')){
+		f = false;
+	}
+	if(!checkName('maintName','maintNameSpan')){
+		f = false;
+	}
+	if(!checkDate('onlineTime','onlineTimeSpan')){
+		f = false;
+	}
+	if(!checkSortId('sortId','sortIdSpan')){
+		f = false;
+	}
+	if(!checkDeploy('deployDesc','deployDescSpan')){
+		f = false;
+	}
+	if(!f){
+		return false;	
+	}else{
+		return true;
+	}
+}
+
+function checkForm(flag){
+	var val = document.getElementById('clusterName').value;
+	/*checkBlank*/
+	if(!checkBlankNoOK('clusterName','clusterNameSpan',"请输入集群名称")){
+		return;
+	}
+		
+	/*checkBlank&User*/
+	getJsonFromServerWithPost("xmlManager.ajax", encodeFormData({
+		"keyword":val,
+		"valueType":"clusterNameRepeat",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		if(returnedJson["second"]){
+			setTipsOK("clusterNameSpan", "OK");
+			if(flag){
+				if(!mcheckBlank()){
+					return;
+				}
+				document.getElementById('addClusterForm').submit();
+			}
+		}
+		else{
+			setTipsWarn("clusterNameSpan", "集群名已存在");
+		}	
+ 	});
+}
+
+</script>
+</head>
+
+<body class="pop">
+<table cellpadding="0" cellspacing="0" class="pop_top">
+ <tr>
+  <td width="" class="pop_lefttop_small">
+    <div><h1>新增集群:</h1></div>
+  </td>
+  <td valign="top" class="pop_righttop_small"><div class="pop_close modalClose"></div></td>
+ </tr>
+</table>
+<form id="addClusterForm" name="addClusterForm" method="POST" action="addCluster.do">
+<table cellpadding="0" cellspacing="0" class="pop_mid">
+ <tr>
+  <td class="pop_left"></td>
+  <td valign="top" class="pop_content">
+  <table border="0" cellspacing="0" cellpadding="0" class="pop_box">
+     <tr>
+       <th> 集群名称 :</th>
+       <td><input name="clusterName" id="clusterName" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"
+	   onfocus="javascript:setTipsClean('clusterNameSpan')" onblur="javascript:checkForm(false)"/></td>
+	   <td ><span id="clusterNameSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> 部署接口人 :</th>
+	    <td><input name="deployName" id="deployName" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onfocus="javascript:setTipsClean('deployNameSpan')" /></td>
+		<td ><span id="deployNameSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th> 运维接口人 :</th>
+	    <td><input name="maintName" id="maintName" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onfocus="javascript:setTipsClean('maintNameSpan')" /></td>
+		<td ><span id="maintNameSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> 上线时间 :</th>
+        <td><input style="float:left; margin-right:5px; vertical-align:bottom; width:70px;height:26px" type="button" value="选择时间" onclick="displayCalendar(document.getElementById('onlineTime'),'yyyy-mm-dd',this)">
+		<input name="onlineTime" id="onlineTime" type="text" style="float:left; margin-right:5px; vertical-align:bottom; width:140px" />
+		</td>
+		<td ><span id="onlineTimeSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th> 排序:</th>
+	    <td><input name="sortId" id="sortId" value="0" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onfocus="javascript:setTipsClean('sortIdSpan')" /></td>
+		<td ><span id="sortIdSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> 部署描述 :</th>
+       <td><textarea type="text" name="deployDesc" id="deployDesc" rows="6" onfocus="javascript:setTipsClean('deployDescSpan')"></textarea></td>
+	   <td><span id="deployDescSpan">&nbsp;</span></td>
+     </tr>
+  </table>
+  </div>
+    <div class="btn_update">
+      <div class="btn" style="margin:0 0 10px 200px;"><a href="javascript:checkForm(true)">提交</a></div>
+    </div>
+  </td>
+  <td class="pop_right"></td>
+ </tr>
+ <tr>
+  <td class="pop_leftbottom_small"></td>
+  <td class="pop_midbottom_small"></td>
+  <td class="pop_rightbottom_small"></td>
+ </tr>
+</table>
+</form>
+</body>
+</html>

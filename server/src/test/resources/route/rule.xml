@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2012 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<!DOCTYPE cobar:rule SYSTEM "rule.dtd">
+<cobar:rule xmlns:cobar="http://cobar.alibaba.com/">
+
+  <tableRule name="offerRule">
+    <rule>
+      <columns>member_id</columns>
+      <algorithm><![CDATA[ func(${member_id}) ]]></algorithm>
+    </rule>
+    <rule>
+      <columns>offer_id, group_id</columns>
+      <algorithm><![CDATA[ (func2(${offer_id})+func2(${group_id}))%128 ]]></algorithm>
+    </rule>
+  </tableRule>
+  <tableRule name="imageRule">
+    <rule>
+      <columns>member_id</columns>
+      <algorithm><![CDATA[ func(${member_id})  ]]></algorithm>
+    </rule>
+    <rule>
+      <columns>select</columns>
+      <algorithm><![CDATA[ func(${select})  ]]></algorithm>
+    </rule>
+  </tableRule>
+  <tableRule name="offerDetailRule">
+    <rule>
+      <columns>offer_id</columns>
+      <algorithm><![CDATA[ func2(${offer_id})  ]]></algorithm>
+    </rule>
+  </tableRule>
+  <tableRule name="productVisitRule">
+    <rule>
+      <columns>member_id, product_id</columns>
+      <algorithm><![CDATA[ twoDimensionFunc(${member_id},${product_id})  ]]></algorithm>
+    </rule>
+    <rule>
+      <columns>member_id</columns>
+      <algorithm><![CDATA[ twoDimensionFunc(${member_id},null)  ]]></algorithm>
+    </rule>
+    <rule>
+      <columns>product_id</columns>
+      <algorithm><![CDATA[ twoDimensionFunc(null,${product_id})  ]]></algorithm>
+    </rule>
+  </tableRule>
+
+  <function name="twoDimensionFunc"
+    class="com.alibaba.cobar.route.function.Dimension2PartitionFunction">
+    <property name="keyTypeX">string</property>
+    <property name="partitionCountX">4</property>
+    <property name="partitionLengthX">256</property>
+    <property name="hashSliceX">:12</property>
+    <property name="keyTypeY">long</property>
+    <property name="partitionCountY">8</property>
+    <property name="partitionLengthY">128</property>
+  </function>
+  <function name="func"
+    class="com.alibaba.cobar.route.function.PartitionByString">
+    <property name="partitionCount">128</property>
+    <property name="partitionLength">8</property>
+    <property name="hashSlice">:8</property>
+  </function>
+  <function name="func2"
+    class="com.alibaba.cobar.route.function.PartitionByLong">
+    <property name="partitionCount">128</property>
+    <property name="partitionLength">8</property>
+  </function>
+
+</cobar:rule>

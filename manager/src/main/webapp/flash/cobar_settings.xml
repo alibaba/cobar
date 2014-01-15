@@ -1,0 +1,100 @@
+<!--
+ - Copyright 1999-2012 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Value between [] brackets, for example [#FFFFFF] shows default value which is used if this parameter is not set -->
+<!-- This means, that if you are happy with this value, you can delete this line at all and reduce file size -->
+<!-- value or explanation between () brackets shows the range or type of values you should use for this parameter -->
+<!-- the top left corner has coordinates x = 0, y = 0                                                                -->
+<!-- "!" before x or y position (for example: <x>!20</x>) means that the coordinate will be calculated from the right side or the bottom -->
+<settings>
+  <font>Tahoma</font>
+  <data_type>csv</data_type>
+  <hide_bullets_count>18</hide_bullets_count>
+  <reload_data_interval></reload_data_interval>
+  <plot_area>
+    <margins>
+      <left>25</left>
+      <right>5</right>
+      <top>20</top>
+      <bottom>5</bottom>
+    </margins>
+  </plot_area>
+  <grid>
+    <x>
+      <enabled>0</enabled>
+      <alpha>10</alpha>
+    </x>
+    <y_left>
+      <alpha>10</alpha>
+      <approx_count>4</approx_count>
+    </y_left>
+  </grid>
+  <axes>
+    <x>
+      <width>1</width>
+      <color>0D8ECF</color>
+      <alpha>0</alpha>
+    </x>
+    <y_left>
+      <tick_length>3</tick_length>
+      <width>1</width>
+      <color>0D8ECF</color>
+    </y_left>
+    <y_right>
+      <tick_length>2</tick_length>
+    </y_right>
+  </axes>
+  <values>
+    <x>
+      <enabled>0</enabled>
+    </x>
+  </values>
+  <indicator>
+    <enabled>0</enabled>
+    <color>0D8ECF</color>
+    <x_balloon_text_color>FFFFFF</x_balloon_text_color>
+    <line_alpha>50</line_alpha>
+    <selection_color>0D8ECF</selection_color>
+    <selection_alpha>20</selection_alpha>
+  </indicator>
+  <legend>
+    <x>0</x>
+    <y>0</y>
+    <max_columns>2</max_columns>
+    <spacing>0</spacing>
+    <align>right</align>
+    <text_size>10</text_size>
+    <key>
+      <size>10</size>
+    </key>
+    <graph_on_off>false</graph_on_off>
+  </legend>
+  <graphs>
+    <graph gid="0">
+      <title>Recv</title>
+      <color>1AAFE7</color>
+      <color_hover>1AAFE7</color_hover>
+      <selected>0</selected>
+    </graph>
+    <graph gid="1">
+      <title>Send</title>
+      <color>ABC930</color>
+      <color_hover>ABC930</color_hover>
+      <selected>0</selected>
+    </graph>
+  </graphs>
+</settings>

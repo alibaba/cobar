@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2012 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<!DOCTYPE cobar:schema SYSTEM "schema.dtd">
+<cobar:schema xmlns:cobar="http://cobar.alibaba.com/">
+
+  <schema name="cndb" dataNode="cndb_dn" group="cobarGroup1">
+    <table name="offer" dataNode="offer_dn$0-127" rule="offerRule" />
+    <table name="offer_detail" dataNode="detail_dn[0],detail_dn$1-127"
+      rule="offerDetailRule" ruleRequired="false" />
+    <table name="wp_image" dataNode="offer_dn$0-127" rule="imageRule" />
+    <table name="product_visit" dataNode="offer_dn$0-127" rule="productVisitRule" />
+    <table name="independent" dataNode="independent_dn$0-126,independent_dn[127]" />
+  </schema>
+  <schema name="dubbo" dataNode="dubbo_dn" />
+  <schema name="ignoreSchemaTest" dataNode="cndb_dn"
+    keepSqlSchema="true" />
+  <schema name="ignoreSchemaTest0" dataNode="cndb_dn"
+    keepSqlSchema="true">
+    <table name="offer" dataNode="offer_dn$0-127" rule="offerRule" />
+  </schema>
+  <schema name="config" dataNode="cndb_dn">
+    <table name="offer" dataNode="offer_dn$0-127" rule="offerRule"
+      ruleRequired="true" />
+  </schema>
+  <schema name="none_node_test">
+    <table name="offer" dataNode="offer_dn$0-127" rule="offerRule"
+      ruleRequired="true" />
+  </schema>
+  <schema name="solo1" dataNode="solo1" />
+
+  <dataNode name="cndb_dn">
+    <property name="dataSource">
+      <dataSourceRef>cndb_ds[0]</dataSourceRef>
+      <dataSourceRef>cndb_ds[1]</dataSourceRef>
+    </property>
+    <property name="heartbeat">select user()</property>
+  </dataNode>
+  <dataNode name="offer_dn">
+    <property name="dataSource">
+      <dataSourceRef>offer_ds$0-127</dataSourceRef>
+      <dataSourceRef>offer_ds$128-255</dataSourceRef>
+    </property>
+    <property name="heartbeat">update xdual set x=now() where id=${(1,4)}</property>
+  </dataNode>
+  <dataNode name="detail_dn">
+    <property name="dataSource">
+      <dataSourceRef>offer_ds$0-127</dataSourceRef>
+      <dataSourceRef>offer_ds$128-255</dataSourceRef>
+    </property>
+    <property name="heartbeat">select user()</property>
+  </dataNode>
+  <dataNode name="independent_dn">
+    <property name="dataSource">
+      <dataSourceRef>offer_ds$0-127</dataSourceRef>
+      <dataSourceRef>offer_ds$128-255</dataSourceRef>
+    </property>
+    <property name="heartbeat">select user()</property>
+  </dataNode>
+  <dataNode name="dubbo_dn">
+    <property name="dataSource">
+      <dataSourceRef>dubbo_ds[0]</dataSourceRef>
+      <dataSourceRef>dubbo_ds[1]</dataSourceRef>
+    </property>
+    <property name="heartbeat">select user()</property>
+  </dataNode>
+  <dataNode name="solo1">
+    <property name="dataSource">
+      <dataSourceRef>solo</dataSourceRef>
+    </property>
+    <property name="heartbeat">select user()</property>
+  </dataNode>
+
+  <dataSource name="cndb_ds" type="mysql">
+    <property name="location">
+      <location>10.20.153.177:3316/offer1</location>
+      <location>10.20.153.177:3316/offer1</location>
+    </property>
+    <property name="user">offer</property>
+    <property name="password">offer</property>
+    <property name="sqlMode">STRICT_TRANS_TABLES</property>
+  </dataSource>
+  <dataSource name="offer_ds" type="mysql">
+    <property name="location">
+      <location>10.20.153.177:3316/offer$1-128</location>
+      <location>10.20.153.177:3316/offer$1-128</location>
+    </property>
+    <property name="user">offer</property>
+    <property name="password">offer</property>
+    <property name="sqlMode">STRICT_TRANS_TABLES</property>
+  </dataSource>
+  <dataSource name="dubbo_ds" type="mysql">
+    <property name="location">
+      <location>10.20.153.177:3316/offer2</location>
+      <location>10.20.153.177:3316/offer2</location>
+    </property>
+    <property name="user">offer</property>
+    <property name="password">offer</property>
+    <property name="sqlMode">STRICT_TRANS_TABLES</property>
+  </dataSource>
+  <dataSource name="solo" type="mysql">
+    <property name="location">
+      <location>10.20.153.177:3316/solo</location>
+    </property>
+    <property name="user">offer</property>
+    <property name="password">offer</property>
+    <property name="sqlMode">STRICT_TRANS_TABLES</property>
+  </dataSource>
+
+</cobar:schema>

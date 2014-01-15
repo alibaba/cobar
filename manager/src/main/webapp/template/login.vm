@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script> 
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" >
+
+function showModal(src, height, width){
+	jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+		closeHTML : "<input type='button' style='display:none'/>",
+		closeClass: "modalClose",
+		opacity : 35,
+		overlayCss : {
+			backgroundColor: "#000"
+		}
+	});
+}
+
+$(function() {
+	if(self.location != top.location){
+		window.parent.location.href="login.htm";
+		$(window.parent.document).find(".modalClose").trigger('click');
+	}	
+
+	var val = "$result";
+	if(val == "false"){
+		showModal("logInFail.htm", "400", "750");
+		modalflag = true;
+	}else if (val == "login"){
+		showModal("logInPage.htm", "400", "600");
+		modalflag = true;
+	}
+});
+
+function checkForm(){
+	var user = document.getElementById('userName').value;
+	if(Trim(user) == ""){
+		showModal("alert.htm?reason=5", "500", "750");
+		return;
+	}
+		
+	var pwd = document.getElementById('password').value;
+	if(Trim(pwd) == ""){
+		showModal("alert.htm?reason=6", "500", "750");
+		return;
+	}
+	document.getElementById("logInForm").submit();
+}
+
+$(document).keydown(function(event) {
+  if (event.keyCode == 13) {
+  	 checkForm();
+  }
+}); 
+</script>
+</head>
+<body class="login">
+<div class="login-top">
+     <div style=" margin-left:10px; width:100px; float:left;"><img src="images/login_logo.png" width="230" height="74" /></div>
+     <div style=" float:right; margin:30px 30px 0 0;">
+	 <form action="login.do" id="logInForm" method="POST" >
+       <table border="0" cellspacing="0" cellpadding="0" >
+         <tr>
+           <td><input name="userName" id="userName" type="hidden" /></td>
+           <td><input name="password" id="password" type="hidden"/></td>
+         </tr>
+       </table>
+     </form>
+     </div>
+</div>
+<div style="margin:25px 20px 30px 30px; ">
+
+
+</div>
+</body>
+</html>

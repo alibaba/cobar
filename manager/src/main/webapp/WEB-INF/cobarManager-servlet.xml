@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="GBK"?>
+<!--
+ - Copyright 1999-2012 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+  <bean id="propertyConfigurerServlet" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>WEB-INF/velocity.properties</value>
+        <value>WEB-INF/xmlpath.properties</value>
+        <value>WEB-INF/delegate.properties</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+    <property name="interceptors">
+      <list>
+        <ref bean="authenticationInterceptor" />
+        <ref bean="permissionInterceptor" />
+      </list>
+    </property>
+  </bean>
+
+  <bean id="velocifyConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+    <property name="resourceLoaderPath" value="/" />
+    <property name="velocityProperties">
+      <props>
+        <prop key="input.encoding">gbk</prop>
+        <prop key="output.encoding">gbk</prop>
+        <prop key="contentType">text/html;charset=gbk</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+    <property name="contentType" value="text/html;charset=GBK" />
+    <property name="prefix" value="template/" />
+    <property name="suffix" value=".vm" />
+  </bean>
+
+  <bean id="authenticationInterceptor" class="com.alibaba.cobar.manager.web.AuthenticationInterceptor">
+    <property name="nonMatchURISet">
+      <set>
+        <value>/logInPage.htm</value>
+        <value>/login.do</value>
+        <value>/logInFail.htm</value>
+        <value>/index.htm</value>
+        <value>/clusterInstantPerfValue.ajax</value>
+        <value>/alert.htm</value>
+        <value>/login.htm</value>
+      </set>
+    </property>
+    <property name="switchURISet">
+      <set>
+        <value>/clusterList.htm</value>
+        <value>/cobarList.htm</value>
+        <value>/cobarDetail.htm</value>
+        <value>/datanodesControl.htm</value>
+        <value>/propertyReloadScreen.htm</value>
+        <value>/connectionControl.htm</value>
+        <value>/m_clusterList.htm</value>
+        <value>/m_userList.htm</value>
+        <value>/m_propertyList.htm</value>
+        <value>/m_cobarList.htm</value>
+        <value>/m_modifypwd.htm</value>
+      </set>
+    </property>
+  </bean>
+  <bean id="permissionInterceptor" class="com.alibaba.cobar.manager.web.PermissionInterceptor">
+    <property name="nonMatchURIMap">
+      <map>
+        <entry key="System_Admin">
+          <set>
+            <value>/</value>
+            <value>/addCluster.htm</value>
+            <value>/addCobar.htm</value>
+            <value>/addUser.htm</value>
+            <value>/clusterList.htm</value>
+            <value>/cobarList.htm</value>
+            <value>/cobarDetail.htm</value>
+            <value>/editClusterPage.htm</value>
+            <value>/editCobarPage.htm</value>
+            <value>/editStopTimesPage.htm</value>
+            <value>/editUserPage.htm</value>
+            <value>/forbidden.htm</value>
+            <value>/m_clusterList.htm</value>
+            <value>/m_cobarList.htm</value>
+            <value>/m_userList.htm</value>
+            <value>/m_propertyList.htm</value>
+            <value>/propertyReloadScreen.htm</value>
+            <value>/propertyReload.htm</value>
+            <value>/connectionControl.htm</value>
+            <value>/datanodesControl.htm</value>
+            <value>/switchDatanode.do</value>
+            <value>/chooseIndex.htm</value>
+            <value>/chooseStoptime.htm</value>
+            <value>/stopheartbeat.htm</value>
+            <value>/addCluster.do</value>
+            <value>/addCobar.do</value>
+            <value>/addUser.do</value>
+            <value>/addStopTime.do</value>
+            <value>/modifyCluster.do</value>
+            <value>/modifyCobar.do</value>
+            <value>/modifyUser.do</value>
+            <value>/logInPage.htm</value>
+            <value>/logInFail.htm</value>
+            <value>/login.do</value>
+            <value>/logout.do</value>
+            <value>/xmlManager.ajax</value>
+            <value>/clusterInstantPerfValue.ajax</value>
+            <value>/cobarNodeInstantPerfValue.ajax</value>
+            <value>/cobarControl.ajax</value>
+            <value>/index.htm</value>
+            <value>/alert.htm</value>
+            <value>/recoveryConfirm.htm</value>
+            <value>/propertyConfirm.htm</value>
+            <value>/killConfirm.htm</value>
+            <value>/killConnection.do</value>
+            <value>/login.htm</value>
+            <value>/m_modifypwd.htm</value>
+            <value>/modifyPwd.do</value>
+            <value>/modifyPwdConfirm.htm</value>
+          </set>
+        </entry>
+        <entry key="Cluster_Admin">
+          <set>
+            <value>/</value>
+            <value>/clusterList.htm</value>
+            <value>/cobarList.htm</value>
+            <value>/cobarDetail.htm</value>
+            <value>/forbidden.htm</value>
+            <value>/propertyReloadScreen.htm</value>
+            <value>/propertyReload.htm</value>
+            <value>/connectionControl.htm</value>
+            <value>/datanodesControl.htm</value>
+            <value>/switchDatanode.do</value>
+            <value>/chooseIndex.htm</value>
+            <value>/chooseStoptime.htm</value>
+            <value>/stopheartbeat.htm</value>
+            <value>/logInPage.htm</value>
+            <value>/logInFail.htm</value>
+            <value>/login.do</value>
+            <value>/logout.do</value>
+            <value>/clusterInstantPerfValue.ajax</value>
+            <value>/cobarNodeInstantPerfValue.ajax</value>
+            <value>/xmlManager.ajax</value>
+            <value>/cobarControl.ajax</value>
+            <value>/index.htm</value>
+            <value>/alert.htm</value>
+            <value>/recoveryConfirm.htm</value>
+            <value>/propertyConfirm.htm</value>
+            <value>/killConfirm.htm</value>
+            <value>/killConnection.do</value>
+            <value>/login.htm</value>
+            <value>/m_modifypwd.htm</value>
+            <value>/modifyPwd.do</value>
+            <value>/modifyPwdConfirm.htm</value>
+          </set>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
+  <!--====================== monitor ======================= -->
+  <bean name="/alert.htm" class="com.alibaba.cobar.manager.web.screen.Alert"></bean>
+
+  <bean name="/login.htm" class="com.alibaba.cobar.manager.web.screen.LogIn"></bean>
+
+  <bean name="/recoveryConfirm.htm" class="com.alibaba.cobar.manager.web.screen.RecoveryConfirm"></bean>
+
+  <bean name="/propertyConfirm.htm" class="com.alibaba.cobar.manager.web.screen.PropertyConfirm"></bean>
+
+  <bean name="/killConfirm.htm" class="com.alibaba.cobar.manager.web.screen.KillConfirm"></bean>
+
+  <bean name="/modifyPwdConfirm.htm" class="com.alibaba.cobar.manager.web.screen.MModifyPwdConfirm"></bean>
+
+  <bean name="/index.htm" class="com.alibaba.cobar.manager.web.screen.Index">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/addCluster.htm" class="com.alibaba.cobar.manager.web.screen.AddClusterPage">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/addCobar.htm" class="com.alibaba.cobar.manager.web.screen.AddCobarPage">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/addUser.htm" class="com.alibaba.cobar.manager.web.screen.AddUserPage">
+  </bean>
+  <bean name="/clusterList.htm" class="com.alibaba.cobar.manager.web.screen.ClusterListScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/cobarList.htm" class="com.alibaba.cobar.manager.web.screen.CobarListScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/cobarDetail.htm" class="com.alibaba.cobar.manager.web.screen.CobarDetailScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/connectionControl.htm" class="com.alibaba.cobar.manager.web.screen.ConnectionControlScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/datanodesControl.htm" class="com.alibaba.cobar.manager.web.screen.DatanodesControlScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/editClusterPage.htm" class="com.alibaba.cobar.manager.web.screen.EditClusterPage">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/editCobarPage.htm" class="com.alibaba.cobar.manager.web.screen.EditCobarPage">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/editStopTimesPage.htm" class="com.alibaba.cobar.manager.web.screen.EditStopTimesPage">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/editUserPage.htm" class="com.alibaba.cobar.manager.web.screen.EditUserPage">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/forbidden.htm" class="com.alibaba.cobar.manager.web.screen.ForbiddenScreen" />
+  <bean name="/logInPage.htm" class="com.alibaba.cobar.manager.web.screen.LogInPage" />
+  <bean name="/logInFail.htm" class="com.alibaba.cobar.manager.web.screen.LogInFail" />
+
+  <bean name="/m_clusterList.htm" class="com.alibaba.cobar.manager.web.screen.MClusterListScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/m_propertyList.htm" class="com.alibaba.cobar.manager.web.screen.MPropertyListScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/m_cobarList.htm" class="com.alibaba.cobar.manager.web.screen.MCobarListScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/m_userList.htm" class="com.alibaba.cobar.manager.web.screen.MUserListScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/m_modifypwd.htm" class="com.alibaba.cobar.manager.web.screen.MUserModifyPwd">
+  </bean>
+
+  <bean name="/propertyReloadScreen.htm" class="com.alibaba.cobar.manager.web.screen.PropertyReloadScreen">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/propertyReload.htm" class="com.alibaba.cobar.manager.web.action.PropertyReload">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+
+  <bean name="/chooseIndex.htm" class="com.alibaba.cobar.manager.web.screen.ChooseIndexPage">
+  </bean>
+  <bean name="/chooseStoptime.htm" class="com.alibaba.cobar.manager.web.screen.ChooseStoptimePage">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/switchDatanode.do" class="com.alibaba.cobar.manager.web.action.SwitchDatanodes">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/stopheartbeat.htm" class="com.alibaba.cobar.manager.web.action.StopHeartbeat">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+
+
+  <!-- ======================== do ======================= -->
+  <bean name="/addCluster.do" class="com.alibaba.cobar.manager.web.action.AddCluster">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/killConnection.do" class="com.alibaba.cobar.manager.web.action.KillConnection">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/addCobar.do" class="com.alibaba.cobar.manager.web.action.AddCobar">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/addStopTime.do" class="com.alibaba.cobar.manager.web.action.AddStopTime">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/addUser.do" class="com.alibaba.cobar.manager.web.action.AddUser">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/login.do" class="com.alibaba.cobar.manager.web.action.LoginAction">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/logout.do" class="com.alibaba.cobar.manager.web.action.LogoutAction" />
+  <bean name="/modifyCluster.do" class="com.alibaba.cobar.manager.web.action.ModifyCluster">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/modifyCobar.do" class="com.alibaba.cobar.manager.web.action.ModifyCobar">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+    <property name="cobarAccesser" ref="cobarAccesser" />
+  </bean>
+  <bean name="/modifyUser.do" class="com.alibaba.cobar.manager.web.action.ModifyUser">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/modifyPwd.do" class="com.alibaba.cobar.manager.web.action.ModifyPassword">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+
+
+  <!-- ==================== ajax ========================= -->
+  <bean name="/xmlManager.ajax" class="com.alibaba.cobar.manager.web.ajax.XmlManagerAjax">
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/clusterInstantPerfValue.ajax" class="com.alibaba.cobar.manager.web.ajax.ClusterInstantPerfValueAjax">
+    <property name="cobarAccesser" ref="cobarAccesser" />
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/cobarNodeInstantPerfValue.ajax" class="com.alibaba.cobar.manager.web.ajax.CobarNodeInstantPerfValueAjax">
+    <property name="cobarAccesser" ref="cobarAccesser" />
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean name="/cobarControl.ajax" class="com.alibaba.cobar.manager.web.ajax.CobarControlAjax">
+    <property name="cobarAccesser" ref="cobarAccesser" />
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+
+  <!-- ================== manager service ============== -->
+  <bean id="cobarAccesser" class="com.alibaba.cobar.manager.service.CobarAccesser">
+    <property name="cobarAdapterDelegate" ref="cobarAdapterDelegate" />
+    <property name="xmlAccesser" ref="xmlAccesser" />
+  </bean>
+  <bean id="cobarAdapterDelegate" class="com.alibaba.cobar.manager.dao.delegate.AdapterDelegate">
+    <property name="dsFactory" ref="dsFactory" />
+    <property name="cobarNodeEvictThreadSweepInverval" value="${cobarNodeEvictThreadSweepInverval}" />
+    <property name="cobarNodeAdapterIdleTime" value="${cobarNodeAdapterIdleTime}" />
+  </bean>
+
+  <bean id="dsFactory" class="com.alibaba.cobar.manager.dao.delegate.DataSourceCreator">
+    <property name="maxActive" value="${maxActive}" />
+    <property name="minIdle" value="${minIdle}" />
+    <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+    <property name="numTestsPerEvictionRun" value="${numTestsPerEvictionRun}" />
+    <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+  </bean>
+
+  <bean id="xmlAccesser" class="com.alibaba.cobar.manager.service.XmlAccesser">
+    <property name="clusterDAO" ref="clusterDAO" />
+    <property name="cobarDAO" ref="cobarDAO" />
+    <property name="userDAO" ref="userDAO" />
+    <property name="propertyDAO" ref="propertyDAO" />
+  </bean>
+
+  <bean id="clusterDAO" class="com.alibaba.cobar.manager.dao.xml.ClusterDAOImple">
+    <property name="xmlFileLoader" ref="xmlFileLoader" />
+  </bean>
+  <bean id="cobarDAO" class="com.alibaba.cobar.manager.dao.xml.CobarDAOImple">
+    <property name="xmlFileLoader" ref="xmlFileLoader" />
+  </bean>
+  <bean id="userDAO" class="com.alibaba.cobar.manager.dao.xml.UserDAOImple">
+    <property name="xmlFileLoader" ref="xmlFileLoader" />
+  </bean>
+  <bean id="propertyDAO" class="com.alibaba.cobar.manager.dao.xml.PropertyDAOImple">
+    <property name="xmlFileLoader" ref="xmlFileLoader" />
+  </bean>
+  <bean id="xmlFileLoader" class="com.alibaba.cobar.manager.dao.xml.XMLFileLoaderPath">
+    <property name="xmlPath" value="${xmlpath}" />
+  </bean>
+</beans>

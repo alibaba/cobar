@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SelectIndex</title>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script language="javascript" type="text/javascript" src="js/jquery-1.4.2.min.js" > </script>
+    <script language="javascript" type="text/javascript" src="js/common.js"></script>
+	<script language="javascript" type="text/javascript" src="js/FormValidate.js"></script>
+	<script language="javascript" type="text/javascript">
+	$(document).ready(function() { 
+		$(".modalClose").click(function() {
+			$(window.parent.document).find(".modalClose").trigger('click');
+		})
+	});	
+	
+	function switchdatanode(){
+		var confirm = window.confirm("确认暂停心跳？");
+		if (!confirm){
+			return;
+		}
+		var str = parent.document.getElementById("datanodes").value;
+		var clusterId = parent.document.getElementById("clusterIdK").value;
+		
+		document.getElementById("datanodes").value = str;
+		document.getElementById("clusterIdK").value = clusterId;
+		document.getElementById('selectForm').submit();
+	}
+	
+    </script>
+</head>
+<body style="background-color:transparent">
+	<form id="selectForm" name="selectForm" method="POST" action="stopheartbeat.htm">
+	<table cellpadding="0" cellspacing="0" class="system_pop">
+		<tr><td class="system_pop_top"></td></tr>
+		<tr><td class="system_pop_mid">  
+    			<div class="pop_close modalClose" ></div>
+                <div class="system_pop_top"> </div>
+				<table cellpadding="0" cellspacing="0" class="system">
+				<tr> 
+				<td >index：</td>
+				<td ><select name="stoptime" id="stoptime" class="a">
+						#foreach($c in $stoptimeList)
+							<option value="${c}">${c}</option>
+						#end
+				</select></td>
+				</tr>
+                <tr ><td>&nbsp;</td><td></td></tr>
+				<tr>
+				<td width="80%"></td>
+				<td> <div class="btn_green" ><a href="javascript:switchdatanode()">确定</a></div></td>
+				</tr>
+				<tr>
+				<input id="datanodes" name="datanodes" type="hidden" value="-1"></input>
+				<input id="clusterIdK" name="clusterIdK" type="hidden" value="-1"></input>
+				<input id="flag" name="flag" type="hidden" value="stop"></input>
+				</tr>
+				</table>
+    		</td>
+		</tr>
+		<tr><td class="system_pop_bottom"></td></tr>
+	</table>
+    </form>
+</body>
+</html>

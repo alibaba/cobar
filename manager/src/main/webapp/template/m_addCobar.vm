@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<link type="text/css" href="css/calendar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript" type="text/javascript" src="js/FormValidate.js"></script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() { 
+	$(".modalClose").click(function() {
+		$(window.parent.document).find(".modalClose").trigger('click');
+	})
+});	
+
+function mcheckBlank(){
+	var f=true;
+	var val = document.getElementById('clusterId').value;
+	if (val == ""){
+		f=false;
+		setTipsWarn("clusterSpan", "请先添加集群");
+		return false;
+	}
+	if(!checkIP('host','hostSpan')){
+	       f=false;
+	}
+	if(!checkPort('serverPort','serverPortSpan',"请正确输入端口号")){
+		f=false;
+	}
+	if(!checkPort('port','portSpan',"请正确输入端口号")){
+		f=false;
+	}
+	if(!checkBlank('userName','userNameSpan',"请输入用户名")){
+		f=false;
+	}
+	if(!f){
+		return false;	
+	}else{
+		return true;
+	}
+}
+
+function checkForm(flag){
+	var val = document.getElementById('cobarName').value;
+	var clu = document.getElementById('clusterId').value;
+	/*checkBlank*/
+	if(!checkBlankNoOK('cobarName','cobarNameSpan',"请输入Cobar名称")){
+		return;
+	}
+		
+	/*checkBlank&User*/
+	getJsonFromServerWithPost("xmlManager.ajax", encodeFormData({
+		"clusterId":clu,
+		"keyword":val,
+		"valueType":"cobarNameRepeat",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		if(returnedJson["second"]){
+			setTipsOK("cobarNameSpan", "OK");
+			if(flag){
+				if(!mcheckBlank()){
+					return;
+				}
+				document.getElementById('addCobarForm').submit();
+			}
+		}
+		else{
+			setTipsWarn("cobarNameSpan", "Cobar名已存在");
+		}	
+ 	});
+	
+}
+</script>
+</head>
+
+<body class="pop">
+<table cellpadding="0" cellspacing="0" class="pop_top">
+ <tr>
+  <td width="" class="pop_lefttop_small">
+    <div><h1>新增Cobar:</h1></div>
+  </td>
+  <td valign="top" class="pop_righttop_small"><div class="pop_close modalClose"></div></td>
+ </tr>
+</table>
+<form id="addCobarForm" name="addCobarForm" method="POST" action="addCobar.do">
+<table cellpadding="0" cellspacing="0" class="pop_mid">
+ <tr>
+  <td class="pop_left"></td>
+  <td valign="top" class="pop_content">
+  <table border="0" cellspacing="0" cellpadding="0" class="pop_box">
+     <tr>
+       <th width="112"> 集群:</th>
+        <td width="247"><select name="clusterId" id="clusterId" class="" style="float:left; margin-right:5px; vertical-align:bottom;">
+		#foreach($c in $cList)
+    		<option value="${c.id}">$!{c.name}</option>
+    	#end
+		</select></td>
+		<td width="191"><span id="clusterSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> Cobar名称:</th>
+       <td><input name="cobarName" id="cobarName" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"
+	   onblur="javascript:checkForm(false)" onfocus="javascript:setTipsClean('cobarNameSpan')"/></td>
+	   <td ><span id="cobarNameSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> IP:</th>
+	    <td><input name="host" id="host" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onfocus="javascript:setTipsClean('hostSpan')" /></td>
+		<td ><span id="hostSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th> 服务端口:</th>
+	    <td><input name="serverPort" id="serverPort" value="8066" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onfocus="javascript:setTipsClean('serverPortSpan')" /></td>
+		<td ><span id="serverPortSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th> 管理端口:</th>
+	    <td><input name="port" id="port" value="9066" type="text" style="float:left; margin-right:5px; vertical-align:bottom;"  
+		onfocus="javascript:setTipsClean('portSpan')" /></td>
+		<td ><span id="portSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> 登录用户名:</th>
+        <td><input name="userName" id="userName" type="text" style="float:left; margin-right:5px; vertical-align:bottom;" 
+		onfocus="javascript:setTipsClean('userNameSpan')" />
+		</td>
+		<td ><span id="userNameSpan">&nbsp;</span></td>
+     </tr>
+     <tr>
+       <th> 登录密码:</th>
+       <td><input name="password" id="password" type="password" style="float:left; margin-right:5px; vertical-align:bottom;" 
+		onfocus="javascript:setTipsClean('passwordSpan')" />
+		</td>
+		<td ><span id="passwordSpan">&nbsp;</span></td>
+     </tr>
+	 <tr>
+       <th > 状态:</th>
+        <td ><select name="status" id="status" class="" style="float:left; margin-right:5px; vertical-align:bottom;">
+		    <option value="Active" selected>启用</option>
+			<option value="InActive" >禁用</option></select>
+		</select></td>
+		<td >&nbsp;</td>
+     </tr>
+  </table>
+  </div>
+    <div class="btn_update">
+      <div class="btn" style="margin:0 0 10px 200px;"><a href="javascript:checkForm(true)">提交</a></div>
+    </div>
+  </td>
+  <td class="pop_right"></td>
+ </tr>
+ <tr>
+  <td class="pop_leftbottom_small"></td>
+  <td class="pop_midbottom_small"></td>
+  <td class="pop_rightbottom_small"></td>
+ </tr>
+</table>
+</form>
+</body>
+</html>

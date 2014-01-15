@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<link type="text/css" href="css/calendar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript" type="text/javascript" src="js/FormValidate.js"></script>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() { 
+	$(".modalClose").click(function() {
+		$(window.parent.document).find(".modalClose").trigger('click');
+	})
+});	
+
+function checkForm(flag){
+	var val = document.getElementById('times').value;
+	/*checkBlank*/
+	if(!checkStopTime('times','timesSpan')){
+		return;
+	}
+		
+	/*checkBlank&User*/
+	getJsonFromServerWithPost("xmlManager.ajax", encodeFormData({
+		"keyword":val,
+		"valueType":"stopTimesRepeat",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		if(returnedJson["second"]){
+			setTipsOK("timesSpan", "OK");
+			if(flag){
+				getJsonFromServerWithPost("xmlManager.ajax", encodeFormData({
+    			"keyword":val,
+    			"valueType":"addStopTimes",
+    			"nowTime":new Date()
+        		}), function(returnedJson) {
+        			if(returnedJson["second"]){
+        				setTipsOK("timesSpan", "OK");
+        				window.parent.location.reload();
+        			}
+        			else{
+        				setTipsWarn("timesSpan", "false");
+        			}	
+        	 	});
+			}
+		}
+		else{
+			setTipsWarn("timesSpan", "该项值已经存在");
+		}	
+ 	});
+}
+
+
+function delTime(time){
+	var confirm = window.confirm("确认删除该时间？");
+	if (!confirm){
+		return;
+	}
+	getJsonFromServerWithPost("xmlManager.ajax", encodeFormData({
+		"keyword":time,
+		"valueType":"delStopTimes",
+		"nowTime":new Date()
+	}), function(returnedJson) {
+		if(returnedJson["second"]){
+			window.parent.location.reload();
+		}
+		else{
+			setTipsWarn("timesSpan", "false");
+		}	
+ 	});
+}
+
+
+</script>
+</head>
+
+<body class="pop">
+<table cellpadding="0" cellspacing="0" class="pop_top">
+ <tr>
+  <td width="" class="pop_lefttop_small">
+    <div><h1>编辑暂停时间:</h1></div>
+  </td>
+  <td valign="top" class="pop_righttop_small"><div class="pop_close modalClose"></div></td>
+ </tr>
+</table>
+<table cellpadding="0" cellspacing="0" class="pop_mid">
+ <tr>
+  <td class="pop_left"></td>
+  <td valign="top" class="pop_content">
+  <table border="0" cellspacing="0" cellpadding="0" class="pop_box">
+	#foreach($l in $list)
+	<tr >
+		<th width="112" > $!{l}</th>
+		<td width="247" style="text-align:center"><a href="javascript:delTime(${l})" >[&nbsp;删除&nbsp;]</a></td>
+		<td width="191"></td>
+    </tr>
+	#end
+	
+	<div style="border-bottom:#e1e1e1 2px solid; width:550px; margin:0 auto"></div>
+	<tr >
+	<th width="112"> 新增时间</th>
+	<td width="247"><input id="times" name="times" type="text" style="float:left; margin-right:5px; vertical-align:bottom;width:170px;"
+    onblur="javascript:checkForm(false)" onfocus="javascript:setTipsClean('timesSpan')"/>小时</td>
+    <td width="191"><span id="timesSpan">1-100之间正整数</span></td>
+    </tr>
+  </table>
+    <div class="btn_update">
+      <div class="btn" style="margin:0 0 10px 200px;">
+		<a href="javascript:checkForm(true)">添加</a></div>
+    </div>
+  </td>
+  <td class="pop_right"></td>
+ </tr>
+ <tr>
+  <td class="pop_leftbottom_small"></td>
+  <td class="pop_midbottom_small"></td>
+  <td class="pop_rightbottom_small"></td>
+ </tr>
+</table>
+</body>
+</html>

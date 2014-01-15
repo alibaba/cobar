@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Cobar Manager</title>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script language="javascript" type="text/javascript" src="js/jquery-1.4.2.min.js" > </script>
+	<script language="javascript" type="text/javascript">
+	$(document).ready(function() { 
+		$(".modalClose").click(function() {
+			window.history.back();
+		})
+	});
+    </script>
+</head>
+<body style="background-color:transparent">
+	<table cellpadding="0" cellspacing="0" class="system_pop">
+		<tr><td class="system_pop_top"></td></tr>
+		<tr><td class="system_pop_mid"> 
+			<table cellpadding="0" cellspacing="0" class="add ">
+                <tr ><td ><span style="text-align:center;display:block;">$info</span></td></tr>
+            </table>
+			<div class="btn_green modalClose" style="margin-bottom:10px;cursor:pointer;"><a href="#">关闭</a></div>
+		</td></tr>
+		<tr><td class="system_pop_bottom"></td></tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>配置重载</title>
+    <meta http-equiv="Content-Language" content="zh-CN"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script language="javascript" type="text/javascript" src="js/jquery-1.4.2.min.js" ></script>
+	<script language="javascript" type="text/javascript" src="js/jquery.simplemodal-1.4.js" ></script>
+	<script language="javascript" type="text/javascript" src="js/common.js"></script>
+	<script language="javascript">
+	
+	function showModal(src, height, width){
+    	jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+    		closeHTML : "<input type='button' style='display:none'/>",
+    		closeClass: "modalClose",
+    		opacity : 35,
+    		overlayCss : {
+    			backgroundColor: "#000"
+    		}
+    	});
+    }
+	
+	function checkbox()
+    {
+    	var box = document.getElementById("checkbox");
+    	var cobararray = document.getElementsByName("cobar");
+    	if(box.checked){
+    		for(var i=0;i<cobararray.length;i++){
+				if (cobararray[i].disabled == false){
+    				cobararray[i].checked=true;
+				}
+    		}
+    	}else{
+    		for(var i=0;i<cobararray.length;i++){
+    			cobararray[i].checked=false;
+    		}
+    	
+    	}
+    }
+	
+	function getCheckedValue(){
+		var flag=false;
+    	var cobararray = document.getElementsByName("cobar");
+		var str = "";
+		for(var i=0;i<cobararray.length;i++){
+			if(cobararray[i].checked){
+				flag = true;
+				if(str == ""){
+					str +=cobararray[i].value;
+				}else{
+					str += ",";
+					str +=cobararray[i].value;
+				}
+			}
+			
+		}
+		if (flag == false){
+			return false;
+		}
+		return str;
+	}
+	
+	function configReload(){
+		var str = getCheckedValue();
+		if(str == false){
+			alert("请选择cobar!");
+			return;
+		}
+		
+		var confirm = window.confirm("确认进行配置重载？");
+		if (!confirm){
+			return;
+		}
+		
+		var src="propertyReload.htm?list="+str+"&type=configReload";
+		showModal(src,500,510);
+		
+//		document.getElementById("type").value = "configReload";
+//		document.getElementById("list").value = str;
+//		document.getElementById('reloadForm').submit();
+		
+	}
+	function configRollback(){
+		var str = getCheckedValue();
+		if(str == false){
+			alert("请选择cobar!");
+			return;
+		}
+		
+		var confirm = window.confirm("确认进行配置回滚？");
+		if (!confirm){
+			return;
+		}
+		
+		var src="propertyReload.htm?list="+str+"&type=configRollback";
+		showModal(src,500,510);
+//		document.getElementById("type").value = "configRollback";
+//		document.getElementById("list").value = str;
+//		document.getElementById('reloadForm').submit();
+		
+	}
+	
+	function openResultWindow(){
+       ResultWindow = window.open('','result','width=900,height=600');
+       ResultWindow.focus();
+       return true;
+    }
+    </script>
+</head>
+<body>
+	<div class="head_bg">
+		<div class="head_box">
+			<div class="logo"></div>
+			<div class="head_main"></div>
+			<div class="head_right">
+				<span class="login"><a href="#" class="user">${user.realname}</a>，欢迎登录！<a 
+					href="logout.do">&nbsp;[&nbsp;退出&nbsp;]</a></span>
+			</div>
+		</div>
+	</div>
+    <div class="main">
+		<table cellpadding="0" cellspacing="0">
+			<tbody>
+				<tr>
+					<td class="main_left">&nbsp;</td>
+					<td valign="top">
+						<div class="nav">
+							<ul>
+								<li class="sub_nav"><a href="clusterList.htm"><img src="images/arrowleft_srf.png" width="6" height="7" />监控模块</a></li>
+    							<li class="current"><a href="datanodesControl.htm"><img src="images/arrow_srf.png" width="6" height="5" />控制模块</a>
+    								<ul><li><a href="datanodesControl.htm"><img src="images/arrowleft_srf.png" width="6" height="7" />节点管理</a></li>
+    									<li><a href="propertyReloadScreen.htm"><img src="images/arrowleft_srf.png" width="6" height="7" />配置重载</a></li>
+    									<li><a href="connectionControl.htm"><img src="images/arrowleft_srf.png" width="6" height="7" />连接管理</a></li>
+    								</ul>
+                                </li>
+                                #if($!{user.user_role}=="System_Admin")
+                                <li class="sub_nav"><a href="m_clusterList.htm"><img src="images/arrow_srf.png" width="6" height="5" />系统管理</a> 
+    								<ul>
+    									<li><a href="m_clusterList.htm"><img src="images/arrowleft_srf.png" width="6" height="7" />集群管理</a></li>
+    									<li><a href="m_userList.htm"><img src="images/arrowleft_srf.png" width="6" height="7" />用户管理</a></li>
+    									<li><a href="m_propertyList.htm"><img src="images/arrowleft_srf.png" width="6" height="7" />配置管理</a></li>
+    								</ul>
+    							</li>
+								#end
+							</ul>
+						</div>
+						<div class="main_box3"> 
+							<div class="main_content">
+								<table class="tab_title_srf">
+									<tr>
+										<td width="20" align="right"><img src="images/ico_setting.png" width="16" height="16" align="absbottom"/></td><td class="title"><legend>您现在在：<a href="datanodesControl.htm">控制模块</a>
+										&nbsp;>>&nbsp;配置重载</legend></td> 
+                    				</tr>
+								</table>
+                            </div>
+                        </div>
+						<div class="tab_box_srf">
+    						<div class="tab_main">
+								<form id="selectForm" name="selectForm" method="POST" action="propertyReloadScreen.htm">
+        							<table cellpadding="0" cellspacing="0"  class="sql_list data_setting">
+        								<tr> 
+        									<td height="23">所属集群：</td>
+        									<td height="23"><select name="clusterId" id="clusterId" class="a">
+    												#foreach($c in $cList)
+    													#if($clusterId == ${c.id})
+    														<option value="${c.id}" selected>${c.name}</option>
+    													#else
+    														<option value="${c.id}">${c.name}</option>
+    													#end
+    												#end
+        									</select></td>
+        									<td> <div class="btn_green"><a href="javascript:void(document.getElementById('selectForm').submit())">搜索</a></div></td>
+        									<td width="50%"></td>
+        								</tr>
+        							</table>
+                                </form>
+    							<div style="padding:20px 20px 10px 20px;*padding:20px"> 
+									<div class="btn_green btn_t_srf"><a href="javascript:configRollback()" class="refresh">配置回滚</a></div>
+									<div class="btn_green btn_t_srf"><a href="javascript:configReload()" class="refresh">配置重载</a></div>
+    								<table cellpadding="0" cellspacing="0" class="sql_list data_setting">
+    									<tr> 
+    										<th > <input type="checkbox" name="checkbox" id="checkbox" onclick="javascript:checkbox()" /></th>
+    										<th >序号</th>
+    										<th >Cobar</th>
+											<th >HOST</th>
+											<th >状态</th>
+    										<th >最后重载时间</th>
+    										<th >最后回滚时间</th>
+    									</tr>
+										#foreach($c in $cobarList)
+										<tr> 
+    										<th > 
+												#if(${c.status}=="Active")
+													<input type="checkbox" name="cobar" value="${c.id}" />
+												#else
+													<input type="checkbox" name="cobar" value="${c.id}" disabled="true"/>
+												#end
+											</th>
+    										<th >$velocityCount</th>
+    										<th >${c.name}</th>
+											<th >${c.host}</th>
+											<th >
+												#if(${c.status}=="Active")
+													连接正常
+												#elseif(${c.status}=="InActive")
+													禁用
+												#else
+                                                    <font color="red">连接异常</font>
+												#end
+											</th>
+    										<th >${c.reloadTime}</th>
+    										<th >${c.rollbackTime}</th>
+    									</tr>
+										#end
+    								</table>
+    							</div>
+								<form id="reloadForm" name="reloadForm" method="POST" action="propertyReload.htm" target="result" onsubmit="return openResultWindow();">
+									<tr>
+										<input id="type" name="type" type="hidden" value=""></input>
+										<input id="list" name="list" type="hidden" value=""></input>
+									</tr>
+                                </form>
+    						</div>
+						</div>
+					</td>
+                    <td class="main_right">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+        <div class="bottom_bg">
+            <div class="bottom">
+                <div class="bottom_left"></div>
+                <div class="bottom_right"></div>
+            </div>
+        </div>
+    </body>
+</html>

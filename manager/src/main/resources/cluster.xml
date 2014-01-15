@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clusters>
+  <cluster>
+    <property name="id">1</property>
+    <property name="sortId">0</property>
+    <property name="name">test</property>
+    <property name="deployContact">test</property>
+    <property name="maintContact">test</property>
+    <property name="onlineTime">2012-11-27</property>
+    <property name="deployDesc">sdf</property>
+  </cluster>
+</clusters>

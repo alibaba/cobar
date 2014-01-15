@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script>
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript">
+	$(function() {
+		$(".modalClose").click(function() {
+			$(window.parent.document).find(".modalClose").trigger('click');
+		})
+		
+		$(".sure").click(function() {
+			document.getElementById("clusterIdK").value=parent.document.getElementById("clusterIdK").value;
+			document.getElementById("datanodes").value=parent.document.getElementById("datanodes").value;
+			document.getElementById("selectForm").submit();
+		})
+	});
+	
+</script>
+</head>
+
+<body class="pop pop_del">
+<div class="pop_tipmessage_choose">
+<div class="pop_close modalClose tip_close"></div>
+<form id="selectForm" name="selectForm" method="POST" action="stopheartbeat.htm">
+ <table cellpadding="0" cellspacing="0" >
+  <tr><th>
+		<input id="datanodes" name="datanodes" type="hidden" value="-1" />
+		<input id="clusterIdK" name="clusterIdK" type="hidden" value="-1" />
+		<input id="stoptime" name="stoptime" type="hidden" value="0" />
+		<input id="flag" name="flag" type="hidden" value="recovery" />
+  </th></tr>
+  <tr><td style="text-align:left;">$!{reason}</td></tr>
+  <tr><td class="pop_tip_btn"><div class="login_btn right modalClose"><a href="#">取消</a></div><div class="login_btn right sure"><a href="#">确定</a></div></td></tr>
+ </table>
+</form>
+</div>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>CobarManager</title>
+<link type="text/css" href="css/common.css" rel="stylesheet"/>
+<link type="text/css" href="css/skin.css" rel="stylesheet"/>
+<link type="text/css" href="css/cobar.css" rel="stylesheet"/>
+<script type="text/javascript" src="js/trcolor.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript" src="js/jquery.simplemodal-1.4.js"></script>
+<script language="javascript" type="text/javascript" src="js/common.js"></script>
+<script language="javascript">
+	function checkbox(){
+    	var box = document.getElementById("checkbox");
+    	var array = document.getElementsByName("datanode");
+    	if(box.checked){
+    		for(var i=0;i<array.length;i++){
+    			array[i].checked=true;
+    		}
+    	}else{
+    		for(var i=0;i<array.length;i++){
+    			array[i].checked=false;
+    		}
+    	
+    	}
+    }
+	
+	function getCheckedValue(){
+		var flag=false;
+    	var array = document.getElementsByName("datanode");
+		var str = "";
+		for(var i=0;i<array.length;i++){
+			if(array[i].checked){
+				flag = true;
+				if(str == ""){
+					str +=array[i].value;
+				}else{
+					str += ",";
+					str +=array[i].value;
+				}
+			}
+			
+		}
+		if (flag == false){
+			return false;
+		}
+		return str;
+	}
+	
+	function switchdatanode (){
+		if (!$!{connecitonFlag}){
+			showModal("alert.htm?reason=2", "500", "750");
+			return;
+		}
+		if (!$!{uniform}){
+			showModal("alert.htm?reason=3", "500", "750");
+			return;
+		}
+		
+		var flag=false;
+    	var array = document.getElementsByName("datanode");
+		var str = "";
+		var maxIndex = -1;
+		for(var i=0;i<array.length;i++){
+			if(array[i].checked){
+				flag = true;
+				if(str == ""){
+					str +=array[i].value;
+				}else{
+					str += ",";
+					str +=array[i].value;
+				}
+				var id = "index_"+array[i].value;
+    			var index = document.getElementById(id).value;
+    			if(maxIndex < index){
+    				maxIndex = index;
+    			}
+			}
+		}
+		if (flag == false){
+			showModal("alert.htm?reason=7", 500, 750);
+			return;
+		}
+		document.getElementById("datanodes").value = str;
+		var src = "chooseIndex.htm?maxIndex=" + maxIndex;
+		showModal(src, 500, 720);
+	}
+	
+	function showModal(src, height, width){
+    	jQuery.modal('<iframe src="' + src + '" height="' + height + '" width="'+ width +'" frameborder="0" allowTransparency=true>', {
+    		closeHTML : "<input type='button' style='display:none'/>",
+    		closeClass: "modalClose",
+    		opacity : 35,
+    		overlayCss : {
+    			backgroundColor: "#000"
+    		}
+    	});
+    }
+	
+	function stop (){
+		if (!$!{connecitonFlag}){
+			showModal("alert.htm?reason=2", "500", "750");
+			return;
+		}
+		if (!$!{uniform}){
+			showModal("alert.htm?reason=3", "500", "750");
+			return;
+		}
+		var flag=false;
+    	var array = document.getElementsByName("datanode");
+		var str = "";
+		for(var i=0;i<array.length;i++){
+			if(array[i].checked){
+				flag = true;
+				if(str == ""){
+					str +=array[i].value;
+				}else{
+					str += ",";
+					str +=array[i].value;
+				}
+			}
+		}
+		if (flag == false){
+			showModal("alert.htm?reason=7", 500, 720);
+			return;
+		}
+		document.getElementById("datanodes").value = str;
+		showModal("chooseStoptime.htm?", 500, 720);
+	}
+	
+	function recovery(){
+		if (!$!{connecitonFlag}){
+			showModal("alert.htm?reason=2", "500", "750");
+			return;
+		}
+		if (!$!{uniform}){
+			showModal("alert.htm?reason=3", "500", "750");
+			return;
+		}
+		var chooseflag=false;
+    	var array = document.getElementsByName("datanode");
+		var str = "";
+		for(var i=0;i<array.length;i++){
+			if(array[i].checked){
+				chooseflag = true;
+				if(str == ""){
+					str +=array[i].value;
+				}else{
+					str += ",";
+					str +=array[i].value;
+				}
+			}
+		}
+		if (chooseflag == false){
+			showModal("alert.htm?reason=7", 500, 720);
+			return;
+		}
+		
+		document.getElementById("datanodes").value = str;
+		
+		showModal("recoveryConfirm.htm",500,750);
+		return ;
+		
+	}
+	
+</script>
+</head>
+<body>
+#parse("template/menu_c.vm")
+
+<div class="main">
+   <div class="title">
+  <h2>节点管理</h2></div>
+  <div class="crumbs">控制模块 &nbsp;&gt;&nbsp;节点管理</div>
+  <div style="clear:both;">
+	<form id="selectForm" name="selectForm" method="POST" action="datanodesControl.htm">
+    <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom:6px;">
+      <tr>
+        <td><img src="images/search_global_l.png" width="78" height="32" /></td>
+        <td background="images/search_global_m.png">所属集群：</td>
+        <td background="images/search_global_m.png"><span style="color:#000; background-image:url(images/search_m.png);">
+         <select name="clusterId" id="clusterId" class="setting_select">
+             #foreach($c in $cList)
+    			#if($clusterId == ${c.id})
+    				<option value="${c.id}" selected>${c.name}</option>
+    			#else
+    				<option value="${c.id}">${c.name}</option>
+    			#end
+    		#end
+         </select>
+        </span></td>
+        <td><img src="images/search_global_r3.png" width="2" height="32" /></td>
+        <td><a class="search_btn" href="javascript:void(document.getElementById('selectForm').submit())"></a></td>
+        <td><img src="images/search_global_r2.png"/></td>
+      </tr>
+    </table>
+	</form>
+  </div>
+  <div style="padding:15px 15px 15px 15px; background-color: #F5F5F5; border: #E1E1E1 1px solid;">
+  <div style="margin-bottom:8px">
+      <table border="0" cellpadding="0" cellspacing="0">
+       <tr>
+         <td style="padding-right:10px;"><div class="btn4"><a href="javascript:switchdatanode()">切换</a></div></td>
+         <td style="padding-right:10px;"><div class="btn4"><a href="javascript:stop()">暂停心跳</a></div></td>
+         <td style="padding-right:10px;"><div class="btn4"><a href="javascript:recovery()">恢复心跳</a></div></td>
+         <td style="padding-right:10px;"><intput type="button" style="display:none;" id="sureConfirm" onclick="javascript:sureConfirm()" /></td>
+		 #if(!$!{connecitonFlag})
+            <td><font color="red">集群中存在cobar连接异常，请检查</font></td>
+		 #elseif(!$!{uniform})
+			<td><font color="red">集群中各cobar的数据节点不一致，请检查</font></td>
+		 #end
+      </tr>
+     </table>
+  </div>
+  <table border="0" cellspacing="0" cellpadding="0" class="list" id="table_o">
+     <tr>
+       <th style="width:25px;"><input name="checkbox" id="checkbox" type="checkbox" onclick="javascript:checkbox()" />
+       &nbsp;</th>
+       <th style="text-align:right;width:40px;padding-left:1px;">序号</th>
+       <th >数据节点名称</th>
+       <th >数据源</th>
+       <th >数据节点状态</th>
+       <th >心跳状态</th>
+     </tr>
+	 #foreach($c in $!datanodes)
+	 <tr> 
+		<td ><input type="checkbox" name="datanode" value="${c.poolName}" /></td>
+		<td style="text-align:right;"><input type="hidden" id="index_${c.poolName}" value="${c.indexlength}">$velocityCount</td>
+		<td >$!{c.poolName}</td>
+		<td >$!{c.dataSource}</td>
+		<td title=$!{c.status}>
+			#if(-1==$!{c.index})
+                <font color="red">不一致</font>
+			#else
+				$!{c.index}
+			#end
+		</td>
+		<td title=$!{c.time}>
+			#if(-1==$!{c.recoveryTime})
+				正常
+			#else
+				$!{c.recoveryTime}
+			#end
+		</td>
+	 </tr>
+	 #end
+	<form id="recoveryForm" name="recoveryForm" method="POST" action="stopheartbeat.htm">
+	<tr>
+		<input id="clusterIdK" name="clusterIdK" type="hidden" value="${clusterId}"></input>
+		<input id="datanodes" name="datanodes" type="hidden" value=""></input>
+		<input id="stoptime" name="stoptime" type="hidden" value="0"></input>
+		<input id="flag" name="flag" type="hidden" value="recovery"></input>
+	</tr>
+    </form>
+  </table>
+  </div>
+</div>
+#include("template/footer.vm")
+</body>
+</html>
