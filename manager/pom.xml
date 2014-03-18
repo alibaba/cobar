@@ -152,29 +152,6 @@
     </dependency>
   </dependencies>
 
-  <repositories>
-    <repository>
-      <id>alibaba</id>
-      <name>alibaba</name>
-      <url>http://code.alibabatech.com/mvn/releases/</url>
-      <layout>default</layout>
-    </repository>
-  </repositories>
-  <distributionManagement>
-    <repository>
-      <id>opensesame</id>
-      <url>dav:http://code.alibabatech.com/mvn/releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>opensesame</id>
-      <url>dav:http://code.alibabatech.com/mvn/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
-  <issueManagement>
-    <system>JIRA</system>
-    <url>http://code.alibabatech.com/jira/browse/Cobar</url>
-  </issueManagement>
-
   <build>
     <resources>
       <resource>
@@ -233,6 +210,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.8</version>
         <executions>
           <execution>
             <id>add-source</id>

@@ -28,29 +28,6 @@
     <project.encoding>UTF-8</project.encoding>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>alibaba</id>
-      <name>alibaba</name>
-      <url>http://code.alibabatech.com/mvn/releases/</url>
-      <layout>default</layout>
-    </repository>
-  </repositories>
-  <distributionManagement>
-    <repository>
-      <id>opensesame</id>
-      <url>dav:http://code.alibabatech.com/mvn/releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>opensesame</id>
-      <url>dav:http://code.alibabatech.com/mvn/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
-  <issueManagement>
-    <system>JIRA</system>
-    <url>http://code.alibabatech.com/jira/browse/Cobar</url>
-  </issueManagement>
-
   <dependencies>
     <dependency>
       <groupId>mysql</groupId>
