@@ -19,6 +19,8 @@ package com.alibaba.cobar.manager.mock;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -70,6 +72,11 @@ public class SimpleDateSource implements DataSource {
     public Connection getConnection(String username, String password) throws SQLException {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException("Not supported yet.");
     }
 
 }
