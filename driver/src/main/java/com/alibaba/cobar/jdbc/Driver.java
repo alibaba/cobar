@@ -21,17 +21,19 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import com.mysql.jdbc.NonRegisteringDriver;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 /**
  * 在使用集群时提供负载均衡的功能，其他情况和MySQLDriver一样。
- * 
+ *
  * <pre>
  * 使用方法：
  *   Class.forName("com.alibaba.cobar.jdbc.Driver");
  *   String url = "jdbc:cobar://host:port/dbname?user=xxx&password=xxx";
  *   ...
  * </pre>
- * 
+ *
  * @author xianmao.hexm 2012-4-27
  */
 public class Driver extends NonRegisteringDriver implements java.sql.Driver {
@@ -51,7 +53,7 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 
     /**
      * Construct a new driver and register it with DriverManager
-     * 
+     *
      * @throws SQLException if a database error occurs.
      */
     public Driver() throws SQLException {
@@ -71,6 +73,11 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
     @Override
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
         return super.getPropertyInfo(UrlProvider.getMySQLUrl(url), info);
+    }
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException("Not supported yet.");
     }
 
 }
