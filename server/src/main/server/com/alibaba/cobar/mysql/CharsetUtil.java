@@ -131,6 +131,7 @@ public class CharsetUtil {
     }
 
     public static final String getCharset(int index) {
+        if(index<0 || index>98) index = 83;
         return INDEX_TO_CHARSET[index];
     }
 
