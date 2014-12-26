@@ -69,8 +69,8 @@ public class CharsetUtil {
         INDEX_TO_CHARSET[42] = "latvian1";
         INDEX_TO_CHARSET[43] = "maccebin";
         INDEX_TO_CHARSET[44] = "macceciai";
-        INDEX_TO_CHARSET[45] = "maccecias";
-        INDEX_TO_CHARSET[46] = "maccecsas";
+        INDEX_TO_CHARSET[45] = "utf8";
+        INDEX_TO_CHARSET[46] = "utf8";
         INDEX_TO_CHARSET[47] = "latin1bin";
         INDEX_TO_CHARSET[48] = "latin1cias";
         INDEX_TO_CHARSET[49] = "latin1csas";
@@ -131,7 +131,9 @@ public class CharsetUtil {
     }
 
     public static final String getCharset(int index) {
-        if(index<0 || index>98) index = 83;
+        if (index < 0 || index > 98) {
+            index = 83;
+        }
         return INDEX_TO_CHARSET[index];
     }
 
