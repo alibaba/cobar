@@ -50,8 +50,12 @@ public abstract class FrontendConnection extends AbstractConnection {
     protected int port;
     protected int localPort;
     protected long idleTimeout;
+
+    // 原则: 在数据库charset方面传输使用时，都是作为dbCharset来处理的，但是dbCharset来java内部的编码处理时需要转换成为对应的charseet
+    protected String dbCharset;
     protected String charset;
     protected int charsetIndex;
+
     protected byte[] seed;
     protected String user;
     protected String schema;
@@ -174,9 +178,10 @@ public abstract class FrontendConnection extends AbstractConnection {
     }
 
     public boolean setCharsetIndex(int ci) {
-        String charset = CharsetUtil.getCharset(ci);
+        String charset = CharsetUtil.getDbCharset(ci);
         if (charset != null) {
-            this.charset = charset;
+            this.dbCharset = charset;
+            this.charset = CharsetUtil.getCharset(ci);
             this.charsetIndex = ci;
             return true;
         } else {
@@ -189,9 +194,10 @@ public abstract class FrontendConnection extends AbstractConnection {
     }
 
     public boolean setCharset(String charset) {
-        int ci = CharsetUtil.getIndex(charset);
+        int ci = CharsetUtil.getDBIndex(charset);
         if (ci > 0) {
-            this.charset = charset;
+            this.charset = CharsetUtil.getCharset(ci);
+            this.dbCharset = charset;
             this.charsetIndex = ci;
             return true;
         } else {
@@ -252,6 +258,7 @@ public abstract class FrontendConnection extends AbstractConnection {
             mm.position(5);
             String sql = null;
             try {
+                // 使用指定的编码来读取数据
                 sql = mm.readString(charset);
             } catch (UnsupportedEncodingException e) {
                 writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");

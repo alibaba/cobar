@@ -110,8 +110,11 @@ public class MySQLConnection extends BackendConnection {
     private MySQLConnectionPool pool;
     private long threadId;
     private HandshakePacket handshake;
+
     private int charsetIndex;
     private String charset;
+    private String dbCharset;
+
     private volatile int txIsolation;
     private volatile boolean autocommit;
     private long clientFlags;
@@ -500,4 +503,11 @@ public class MySQLConnection extends BackendConnection {
         return SecurityUtil.scramble411(passwd, seed);
     }
 
+    public String getDbCharset() {
+        return dbCharset;
+    }
+
+    public void setDbCharset(String dbCharset) {
+        this.dbCharset = dbCharset;
+    }
 }
