@@ -51,7 +51,7 @@ public abstract class FrontendConnection extends AbstractConnection {
     protected int localPort;
     protected long idleTimeout;
 
-    // 原则: 在数据库charset方面传输使用时，都是作为dbCharset来处理的，但是dbCharset来java内部的编码处理时需要转换成为对应的charseet
+    // 原则: 数据库编码控制使用dbCharset来处理的，设计到Java相关的字符串编码解码采用charset来表示
     protected String dbCharset;
     protected String charset;
     protected int charsetIndex;
