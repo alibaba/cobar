@@ -44,7 +44,7 @@ public class CobarDetectorAuthenticator implements NIOHandler {
 
             // 设置字符集编码
             int charsetIndex = (hsp.serverCharsetIndex & 0xff);
-            String charset = CharsetUtil.getCharset(charsetIndex);
+            String charset = CharsetUtil.getDbCharset(charsetIndex);
             if (charset != null) {
                 source.setCharsetIndex(charsetIndex);
             } else {

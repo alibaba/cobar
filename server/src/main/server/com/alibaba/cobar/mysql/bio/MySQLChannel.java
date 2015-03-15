@@ -113,8 +113,11 @@ public final class MySQLChannel implements Channel {
     private InputStream in;
     private OutputStream out;
     private long threadId;
+
     private int charsetIndex;
     private String charset;
+    private String dbCharset;
+
     private volatile int txIsolation;
     private volatile boolean autocommit;
     private volatile boolean isRunning;
@@ -169,6 +172,8 @@ public final class MySQLChannel implements Channel {
         socket.setReceiveBufferSize(RECV_BUFFER_SIZE);
         socket.setSendBufferSize(SEND_BUFFER_SIZE);
         socket.connect(new InetSocketAddress(dsc.getHost(), dsc.getPort()), SOCKET_CONNECT_TIMEOUT);
+
+        // 直接通过socket进行通信
         in = new BufferedInputStream(socket.getInputStream(), INPUT_STREAM_BUFFER);
         out = new BufferedOutputStream(socket.getOutputStream(), OUTPUT_STREAM_BUFFER);
 
@@ -211,6 +216,8 @@ public final class MySQLChannel implements Channel {
         CommandPacket packet = new CommandPacket();
         packet.packetId = 0;
         packet.command = MySQLPacket.COM_QUERY;
+
+
         packet.arg = rrn.getStatement().getBytes(charset);
 
         // 记录执行开始时间
@@ -326,8 +333,9 @@ public final class MySQLChannel implements Channel {
         // 设置通道参数
         this.threadId = hsp.threadId;
         int ci = hsp.serverCharsetIndex & 0xff;
-        if ((charset = CharsetUtil.getCharset(ci)) != null) {
+        if ((dbCharset = CharsetUtil.getDbCharset(ci)) != null) {
             this.charsetIndex = ci;
+            this.charset = CharsetUtil.getCharset(ci);
         } else {
             throw new UnknownCharsetException("charset:" + ci);
         }
@@ -444,14 +452,20 @@ public final class MySQLChannel implements Channel {
      * 发送字符集设置
      */
     private void sendCharset(int ci) throws IOException {
+        // 发送命令: 直接写入到out中即可
         CommandPacket cmd = getCharsetCommand(ci);
         cmd.write(out);
         out.flush();
+
+
         BinaryPacket bin = receive();
         switch (bin.data[0]) {
         case OkPacket.FIELD_COUNT:
+
             this.charsetIndex = ci;
             this.charset = CharsetUtil.getCharset(ci);
+            this.dbCharset = CharsetUtil.getCharset(ci);
+
             break;
         case ErrorPacket.FIELD_COUNT:
             ErrorPacket err = new ErrorPacket();
@@ -515,7 +529,7 @@ public final class MySQLChannel implements Channel {
     }
 
     private CommandPacket getCharsetCommand(int ci) {
-        String charset = CharsetUtil.getCharset(ci);
+        String charset = CharsetUtil.getDbCharset(ci);
         StringBuilder s = new StringBuilder();
         s.append("SET names ").append(charset);
         CommandPacket cmd = new CommandPacket();

@@ -25,6 +25,7 @@ import com.alibaba.cobar.net.mysql.HandshakePacket;
 import com.alibaba.cobar.net.mysql.OkPacket;
 import com.alibaba.cobar.net.mysql.Reply323Packet;
 
+
 /**
  * MySQL 验证处理器
  * 
@@ -54,10 +55,12 @@ public class MySQLConnectionAuthenticator implements NIOHandler {
 
                 // 设置字符集编码
                 int charsetIndex = (packet.serverCharsetIndex & 0xff);
-                String charset = CharsetUtil.getCharset(charsetIndex);
+                String charset = CharsetUtil.getDbCharset(charsetIndex);
                 if (charset != null) {
                     source.setCharsetIndex(charsetIndex);
-                    source.setCharset(charset);
+                    source.setCharset(CharsetUtil.getCharset(charsetIndex));
+                    source.setDbCharset(charset);
+
                 } else {
                     throw new RuntimeException("Unknown charsetIndex:" + charsetIndex);
                 }
