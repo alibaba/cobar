@@ -33,7 +33,7 @@ public final class UseHandler {
         int length = schema.length();
         if (length > 0) {
             if (schema.charAt(0) == '`' && schema.charAt(length - 1) == '`') {
-                schema = schema.substring(1, length - 2);
+                schema = schema.substring(1, length - 1);
             }
         }
 
