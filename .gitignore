@@ -1,3 +1,8 @@
 /manager/target/
 /driver/target/
 /server/target/
+/manager/.settings/*
+/driver/.settings/*
+/server/.settings/*
+.project
+.classpath
