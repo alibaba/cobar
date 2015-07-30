@@ -9,7 +9,7 @@ https://github.com/alibaba/cobar/wiki
 
 <h1>招聘</h1>
 阿里集团安全部招java架构师和技术专家，欢迎投简历到：xianmao.hexm@alinana-inc.com，岗位详见：<br>
-1. https://ehr.alibaba-inc.com/zhaopin/positionDetail.htm?spm=a1z4o.7404189.0.0.U7nTcX&id=20227 <br>
-2. https://ehr.alibaba-inc.com/zhaopin/positionDetail.htm?spm=a1z4o.7404189.0.0.U7nTcX&id=20152 <br>
+1. https://job.alibaba.com/zhaopin/position_detail.htm?positionId=21089 <br>
+2. https://job.alibaba.com/zhaopin/position_detail.htm?positionId=21157 <br>
 
 
