@@ -121,7 +121,7 @@ public class DefaultCommitExecutor extends NodeExecutor {
 
         // 执行
         final ConcurrentMap<RouteResultsetNode, Channel> target = session.getTarget();
-        Executor executor = session.getSource().getProcessor().getExecutor();
+        Executor committer = session.getSource().getProcessor().getCommitter();
         int started = 0;
         for (RouteResultsetNode rrn : target.keySet()) {
             if (rrn == null) {
@@ -136,7 +136,7 @@ public class DefaultCommitExecutor extends NodeExecutor {
             final MySQLChannel mc = (MySQLChannel) target.get(rrn);
             if (mc != null) {
                 mc.setRunning(true);
-                executor.execute(new Runnable() {
+                committer.execute(new Runnable() {
                     @Override
                     public void run() {
                         _commit(mc, session);

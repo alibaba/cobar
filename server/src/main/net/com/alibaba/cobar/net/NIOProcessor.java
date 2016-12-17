@@ -39,6 +39,7 @@ public final class NIOProcessor {
     private final BufferPool bufferPool;
     private final NameableExecutor handler;
     private final NameableExecutor executor;
+    private final NameableExecutor committer;
     private final ConcurrentMap<Long, FrontendConnection> frontends;
     private final ConcurrentMap<Long, BackendConnection> backends;
     private final CommandCount commands;
@@ -46,19 +47,20 @@ public final class NIOProcessor {
     private long netOutBytes;
 
     public NIOProcessor(String name) throws IOException {
-        this(name, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_CHUNK_SIZE, AVAILABLE_PROCESSORS, AVAILABLE_PROCESSORS);
+        this(name, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_CHUNK_SIZE, AVAILABLE_PROCESSORS, AVAILABLE_PROCESSORS, AVAILABLE_PROCESSORS);
     }
 
-    public NIOProcessor(String name, int handler, int executor) throws IOException {
-        this(name, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_CHUNK_SIZE, handler, executor);
+    public NIOProcessor(String name, int handler, int executor, int committer) throws IOException {
+        this(name, DEFAULT_BUFFER_SIZE, DEFAULT_BUFFER_CHUNK_SIZE, handler, executor, committer);
     }
 
-    public NIOProcessor(String name, int buffer, int chunk, int handler, int executor) throws IOException {
+    public NIOProcessor(String name, int buffer, int chunk, int handler, int executor, int committer) throws IOException {
         this.name = name;
         this.reactor = new NIOReactor(name);
         this.bufferPool = new BufferPool(buffer, chunk);
         this.handler = (handler > 0) ? ExecutorUtil.create(name + "-H", handler) : null;
         this.executor = (executor > 0) ? ExecutorUtil.create(name + "-E", executor) : null;
+        this.committer = (committer > 0) ? ExecutorUtil.create(name + "-C", committer) : null;
         this.frontends = new ConcurrentHashMap<Long, FrontendConnection>();
         this.backends = new ConcurrentHashMap<Long, BackendConnection>();
         this.commands = new CommandCount();
@@ -87,8 +89,12 @@ public final class NIOProcessor {
     public NameableExecutor getExecutor() {
         return executor;
     }
+    
+	public NameableExecutor getCommitter() {
+		return committer;
+	}
 
-    public void startup() {
+	public void startup() {
         reactor.startup();
     }
 

@@ -28,6 +28,7 @@
     <property name="processors">4</property>
     <property name="processorHandler">8</property>
     <property name="processorExecutor">8</property>
+    <property name="processorCommitter">8</property>
     <property name="clusterHeartbeatUser">_HEARTBEAT_USER_</property>
     <property name="clusterHeartbeatPass">_HEARTBEAT_PASS_</property>
   </system>
