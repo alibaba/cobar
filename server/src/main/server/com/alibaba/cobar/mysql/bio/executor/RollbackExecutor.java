@@ -118,14 +118,14 @@ public final class RollbackExecutor extends NodeExecutor {
         }
 
         // 执行
-        Executor exec = source.getProcessor().getExecutor();
+        Executor committer = source.getProcessor().getCommitter();
 
         int started = 0;
         for (RouteResultsetNode rrn : target.keySet()) {
             final MySQLChannel mc = (MySQLChannel) target.get(rrn);
             if (mc != null) {
                 mc.setRunning(true);
-                exec.execute(new Runnable() {
+                committer.execute(new Runnable() {
                     @Override
                     public void run() {
                         _rollback(mc, session);

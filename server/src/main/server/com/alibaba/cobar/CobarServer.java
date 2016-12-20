@@ -104,9 +104,10 @@ public class CobarServer {
         LOGGER.info("Startup processors ...");
         int handler = system.getProcessorHandler();
         int executor = system.getProcessorExecutor();
+        int committer = system.getProcessorCommitter();
         processors = new NIOProcessor[system.getProcessors()];
         for (int i = 0; i < processors.length; i++) {
-            processors[i] = new NIOProcessor("Processor" + i, handler, executor);
+            processors[i] = new NIOProcessor("Processor" + i, handler, executor, committer);
             processors[i].startup();
         }
         timer.schedule(processorCheck(), 0L, system.getProcessorCheckPeriod());

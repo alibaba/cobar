@@ -125,6 +125,7 @@ public final class ShowThreadPool {
         for (NIOProcessor p : server.getProcessors()) {
             list.add(p.getHandler());
             list.add(p.getExecutor());
+            list.add(p.getCommitter());
         }
         return list;
     }
