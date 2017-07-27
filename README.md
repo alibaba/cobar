@@ -20,6 +20,10 @@ Use Cobar as MySQL. You can replace MySQL with Cobar to power your application.
 
 Read the [Roadmap](https://github.com/alibaba/cobar/wiki/RoadMap).
 
+## Architecture
+
+![](https://raw.githubusercontent.com/alibaba/cobar/master/doc/Cobar_architecture.png)
+
 ## Quick start
 
 Read the [Quick Start](https://github.com/alibaba/cobar/wiki/Quick-Start).
@@ -29,9 +33,6 @@ Read the [Quick Start](https://github.com/alibaba/cobar/wiki/Quick-Start).
 + [User Guide](https://github.com/alibaba/cobar/wiki/User--Guide)
 + [FAQ](https://github.com/alibaba/cobar/wiki/FAQ)
 
-## Architecture
-
-![](https://raw.githubusercontent.com/alibaba/cobar/master/doc/Cobar_architecture.png)
 
 ## Contributing
 
