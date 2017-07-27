@@ -1,8 +1,46 @@
-<h1>wiki</h1>
-https://github.com/alibaba/cobar/wiki
+![](cobar/doc/Cobar_logo.png)
 
-<h1>交流</h1>
-旺旺群：1362117836 <br>
-邮箱组：ali-cobar@list.alibaba-inc.com <br>
-个人邮箱：xianmao.hexm@alibaba-inc.com <br>
-问题汇总：[常见问题汇总](https://github.com/alibaba/cobar/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E7%AD%94)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+![Project Status](https://img.shields.io/badge/status-rc-yellow.svg)
+
+## What is Cobar?
+
+Cobar is a proxy for sharding databases and tables,compatible with MySQL protocal and MySQL SQL grama,underlying storage only support MySQL for support foreground business more simple,stable,efficient and safety。
+
+- __Sharding__
+You can add new MySQL instance as your business grows.
+
+- __High availability__
+Both Cobar server and underlying MySQL is clustered,business will not suffer with single node fail.
+
+- __Compatible with MySQL protocol__
+Use Cobar as MySQL. You can replace MySQL with Cobar to power your application.
+
+## Roadmap
+
+Read the [Roadmap](https://github.com/alibaba/cobar/wiki/RoadMap).
+
+## Quick start
+
+Read the [Quick Start](https://github.com/alibaba/cobar/wiki/Quick-Start).
+
+## Documentation
+
++ [User Guide](https://github.com/alibaba/cobar/wiki/User--Guide)
++ [FAQ](https://github.com/alibaba/cobar/wiki/FAQ)
+
+## Architecture
+
+![](cobar/doc/Cobar_architecture.png)
+
+## Contributing
+
+Contributions are welcomed and greatly appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md)
+for details on submitting patches and the contribution workflow.
+
+## Mailing list
+
+alibaba_cobar@googlegroups.com
+
+## License
+Cobar is under the Apache 2.0 license. See the [LICENSE](cobar/LICENSE) file for details.
