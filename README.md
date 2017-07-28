@@ -44,4 +44,4 @@ for details on submitting patches and the contribution workflow.
 alibaba_cobar@googlegroups.com
 
 ## License
-Cobar is under the Apache 2.0 license. See the [LICENSE](https://raw.githubusercontent.com/alibaba/cobar/master/LICENSE) file for details.
+Cobar is under the Apache 2.0 license. See the [LICENSE](https://github.com/alibaba/cobar/blob/master/LICENSE) file for details.
