@@ -36,7 +36,7 @@ Read the [Quick Start](https://github.com/alibaba/cobar/wiki/Quick-Start).
 
 ## Contributing
 
-Contributions are welcomed and greatly appreciated. See [CONTRIBUTING.md](CONTRIBUTING.md)
+Contributions are welcomed and greatly appreciated. See [CONTRIBUTING.md](https://github.com/alibaba/cobar/blob/master/CONTRIBUTING.md)
 for details on submitting patches and the contribution workflow.
 
 ## Mailing list
