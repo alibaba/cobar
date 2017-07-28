@@ -21,12 +21,13 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import com.mysql.jdbc.NonRegisteringDriver;
+
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
 /**
  * 在使用集群时提供负载均衡的功能，其他情况和MySQLDriver一样。
- *
+ * <p>
  * <pre>
  * 使用方法：
  *   Class.forName("com.alibaba.cobar.jdbc.Driver");

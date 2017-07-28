@@ -44,12 +44,12 @@ public class CobarPrivileges implements FrontendPrivileges {
             boolean rs = quarantineHosts.get(host).contains(user);
             if (!rs) {
                 ALARM.error(new StringBuilder().append(Alarms.QUARANTINE_ATTACK)
-                                               .append("[host=")
-                                               .append(host)
-                                               .append(",user=")
-                                               .append(user)
-                                               .append(']')
-                                               .toString());
+                    .append("[host=")
+                    .append(host)
+                    .append(",user=")
+                    .append(user)
+                    .append(']')
+                    .toString());
             }
             return rs;
         } else {

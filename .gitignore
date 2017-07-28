@@ -7,3 +7,7 @@
 .project
 .classpath
 .DS_Store
+.idea
+cobar-server.iml
+cobar-manager.iml
+cobar-driver.iml

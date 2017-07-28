@@ -141,7 +141,7 @@ public class CobarConfig {
 
     public boolean canRollback() {
         if (_users == null || _schemas == null || _dataNodes == null || _dataSources == null || _cluster == null
-                || _quarantine == null || status == ROLLBACK) {
+            || _quarantine == null || status == ROLLBACK) {
             return false;
         } else {
             return true;
