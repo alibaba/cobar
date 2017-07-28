@@ -42,7 +42,7 @@ things.
 1. Visit your fork at https://github.com/$user/cobar (replace `$user` obviously).
 2. Click the `Compare & pull request` button next to your branch.
 
-#### Step 4: get a code review
+### Step 4: get a code review
 
 Once your pull request has been opened, it will be assigned to reviewers,
 Those reviewers will do a thorough code review, looking for
