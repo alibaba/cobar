@@ -1,7 +1,7 @@
 ![](https://raw.githubusercontent.com/alibaba/cobar/master/doc/Cobar_logo.png)
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-![Project Status](https://img.shields.io/badge/status-rc-yellow.svg)
+![Project Status](https://img.shields.io/badge/status-release-green.svg)
 
 ## What is Cobar?
 
