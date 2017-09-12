@@ -4,6 +4,9 @@
 /manager/.settings/*
 /driver/.settings/*
 /server/.settings/*
+/manager/classes/
+/driver/classes/
+/server/classes/
 .project
 .classpath
 .DS_Store

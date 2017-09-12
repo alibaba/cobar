@@ -210,8 +210,9 @@ public final class MySQLChannel implements Channel {
             详细见：http://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-troubleshooting.html#qandaitem-15-1-15
                     https://dev.mysql.com/doc/relnotes/connector-j/en/news-5-1-13.html
             */
-            if(this.charsetIndex != 45 && sc.getCharsetIndex() != 33)
+            if (!(this.charsetIndex == 45 && sc.getCharsetIndex() == 33)) {
                 sendCharset(sc.getCharsetIndex());
+            }
         }
         if (this.txIsolation != sc.getTxIsolation()) {
             sendTxIsolation(sc.getTxIsolation());
@@ -224,8 +225,6 @@ public final class MySQLChannel implements Channel {
         CommandPacket packet = new CommandPacket();
         packet.packetId = 0;
         packet.command = MySQLPacket.COM_QUERY;
-
-
         packet.arg = rrn.getStatement().getBytes(charset);
 
         // 记录执行开始时间
@@ -465,15 +464,12 @@ public final class MySQLChannel implements Channel {
         cmd.write(out);
         out.flush();
 
-
         BinaryPacket bin = receive();
         switch (bin.data[0]) {
         case OkPacket.FIELD_COUNT:
-
             this.charsetIndex = ci;
             this.charset = CharsetUtil.getCharset(ci);
             this.dbCharset = CharsetUtil.getCharset(ci);
-
             break;
         case ErrorPacket.FIELD_COUNT:
             ErrorPacket err = new ErrorPacket();

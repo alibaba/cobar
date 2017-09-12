@@ -27,7 +27,7 @@
 
   <properties>
     <app.encoding>UTF-8</app.encoding>
-    <app.version>1.2.7</app.version>
+    <app.version>1.2.8-SNAPSHOT</app.version>
   </properties>
 
   <dependencies>

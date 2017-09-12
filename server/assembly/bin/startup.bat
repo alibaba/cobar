@@ -55,7 +55,7 @@ echo ---------------------------------------------------
 goto end
 
 :okHome
-set "APP_VERSION=1.2.7"
+set "APP_VERSION=1.2.8-SNAPSHOT"
 
 REM set COBAR_CLASSPATH
 set "COBAR_CLASSPATH=%COBAR_HOME%\conf;%COBAR_HOME%\lib\classes"
