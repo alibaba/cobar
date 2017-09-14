@@ -21,7 +21,7 @@
   <artifactId>cobar-server</artifactId>
   <version>${app.version}</version>
   <packaging>jar</packaging>
-  <name>${artifactId}</name>
+  <name>${project.artifactId}</name>
   <description>The project of cobar-server</description>
   <url>http://code.alibabatech.com/wiki/display/Cobar</url>
 
