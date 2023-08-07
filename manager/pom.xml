@@ -28,7 +28,7 @@
   <properties>
     <project.version>1.0.5</project.version>
     <project.build.sourceEncoding>GBK</project.build.sourceEncoding>
-    <spring.version>2.5.6.SEC03</spring.version>
+    <spring.version>6.0.0</spring.version>
   </properties>
 
   <dependencies>
